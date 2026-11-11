@@ -62,7 +62,15 @@ Then run `exec addons/ABPB/conf/ABPB.cfg` or restart the server.
 | Cvar prefix | `abpb_` | `yb_` | `sypb_` |
 | Bot quota | `abpb_quota` | `yb_quota` | `sypb_quota` |
 
-All three plugins can be loaded at the same time. Bot quotas are counted separately, so their sum must fit the server slots. On a 32-slot server, `abpb_quota 31` already fills all but one slot; disable automatic filling in YaPB/SYPB in that case. `abpb removebots` only removes ABPB bots.
+The files, commands, cvars and plugin names do not collide, so ABPB can be **installed** next to other bot systems. However, only **one bot system should actively manage bots at a time**. Two managers both hook the same GoldSrc engine functions, create fake clients and compete for the same edict/player slots; with both auto-filling, a 32-slot server can be driven past its limits and the server may exit with `no free edicts` or a similar fatal error.
+
+ABPB includes a safety check:
+
+- At map start it looks for other common bot cvars (`yb_*`, `sypb_*`, `fapb_*`, `ebot_*`, `podbot_*`, `pb_*`, `zbot_*`, `zb_*`, `realbot_*`).
+- If one is found and `abpb_compat_auto` is `1` (default), ABPB sets `abpb_quota 0` and `abpb_autovacate 0` and writes a warning to the server log/console.
+- Set `abpb_compat_auto 0` only if you deliberately want to manage several quotas yourself.
+
+For a mixed test, load only one bot manager, or set every other system's quota to 0 and add bots manually from one system at a time. `abpb removebots` only removes ABPB bots.
 
 ## Commands
 
@@ -94,6 +102,7 @@ Edit `cstrike/addons/ABPB/conf/ABPB.cfg`; every option has a comment above it.
 | Setting | Default | Purpose |
 | --- | ---: | --- |
 | `abpb_quota` | `31` | Target bot count |
+| `abpb_compat_auto` | `1` | Detect other bot systems and set ABPB quota/autovacate to 0 |
 | `abpb_quota_mode` | `normal` | `normal`, `fill` or `match` |
 | `abpb_language` | `en` | Interface language; use `chs` or `cht` for Chinese |
 | `abpb_human_copycat` | `1` | Enable Human Copycat |

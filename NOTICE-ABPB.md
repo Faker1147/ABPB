@@ -3,8 +3,10 @@ ABPB 4.3.3 — Artificial Intelligence Bot
 ABPB is an identity-renamed build of AiBo 4.3.3. AiBo creator and project
 maintainer: K9_einzwei (GitHub: keinzwei). ABPB changes the product name,
 plugin namespace, commands, cvars, install folder and AMX Mod X module name so
-it can coexist with YaPB, SYPB and other third-party bots. Behaviour is based on
-the supplied AiBo 4.3.3 sources.
+it can be installed alongside YaPB, SYPB and other third-party bots without
+file/command/cvar collisions. Only one bot system should actively manage bots
+at a time; ABPB's compat_auto guard sets its quota to 0 when another bot system
+is detected. Behaviour is based on the supplied AiBo 4.3.3 sources.
 
 The combined bot is distributed under GPL-2.0-or-later; see COPYING.GPL-2.0.
 It combines the YaPB upstream code (commit 7985904584a0755b216e17cc5de8c5fd28953895,

@@ -60,9 +60,14 @@ LICENSE                         GPL-2.0
 > 本插件是 **Metamod 插件**，不要写进 `liblist.gam` 的 `gamedll`，也不要改名为
 > `mp.dll`。它只支持 32 位（x86）GoldSrc。
 
-## 三、与 YaPB / SYPB 共存
+## 三、与 YaPB / SYPB 等 BOT 共存
 
-ABPB 的目录、DLL 名、Metamod 插件名、命令和 cvar 都与 YaPB/SYPB 分离：
+ABPB 的目录、DLL 名、Metamod 插件名、命令和 cvar 都与其他 BOT 分离，因此可以**安装**在同一台服务器上。但同一时间只应让**一个** BOT 系统管理机器人：
+
+- 两个 BOT 管理器会 hook 同一批 GoldSrc 引擎函数、各自创建 fake client，并争抢同一批玩家槽位/edict。
+- 如果两个系统都自动补位，32 槽服务器很容易被挤爆，常见结果是 `no free edicts` 或服务端直接退出（闪退）。
+- ABPB 默认带有保护：换图时会检测 `yb_*`、`sypb_*`、`fapb_*`、`ebot_*`、`podbot_*`、`pb_*`、`zbot_*`、`zb_*`、`realbot_*` 等 cvar；发现其他 BOT 时自动把 `abpb_quota` 和 `abpb_autovacate` 设为 0，并在日志/控制台提示。
+- 只有在你明确要自己协调多个配额时，才设置 `abpb_compat_auto 0`。
 
 | 项目 | ABPB | YaPB | SYPB |
 | --- | --- | --- | --- |
@@ -71,13 +76,7 @@ ABPB 的目录、DLL 名、Metamod 插件名、命令和 cvar 都与 YaPB/SYPB �
 | cvar 前缀 | `abpb_` | `yb_` | `sypb_` |
 | 机器人配额 | `abpb_quota` | `yb_quota` | `sypb_quota` |
 
-三个插件可以同时出现在 `plugins.ini` 中。注意：
-
-- 各系统的机器人数量分别计算，总和不能超过服务器槽位。例如 32 槽服务器使用
-  `abpb_quota 31` 时，YaPB/SYPB 不要再添加机器人，否则会挤掉真人玩家。
-- 不要复制或改名其他系统的 DLL、配置目录或 cvar。
-- ABPB 只管理自己创建的机器人；`abpb removebots` 不会踢掉 YaPB/SYPB 的机器人。
-- 如果同时加载多个机器人系统，建议只在其中一个系统启用自动补位（quota/fill）。
+混用测试时：只保留一个 BOT 管理器；或把其他系统的 quota 设为 0，只在一个系统里手动加机器人。`abpb removebots` 只移除 ABPB 自己的机器人。
 
 ## 四、常用命令
 
@@ -118,6 +117,7 @@ ABPB 的目录、DLL 名、Metamod 插件名、命令和 cvar 都与 YaPB/SYPB �
 | cvar | 默认 | 说明 |
 | --- | ---: | --- |
 | `abpb_quota` | `31` | 机器人补位数量（32 槽服务器留 1 个真人） |
+| `abpb_compat_auto` | `1` | 检测其他 BOT，自动把 ABPB 配额/自动让位设为 0 |
 | `abpb_quota_mode` | `normal` | `normal` / `fill` / `match` |
 | `abpb_language` | `en` | 界面语言；简体中文改为 `chs`，繁体为 `cht` |
 | `abpb_human_copycat` | `1` | 启用 Human Copycat |

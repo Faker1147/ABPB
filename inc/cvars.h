@@ -131,6 +131,8 @@ inline constexpr const char *kQuotaDefault = "9";
 inline constexpr const char *kQuotaDefault = "31";
 #endif
 inline ConVar cv_quota ("quota", kQuotaDefault, "Specifies the number of bots to be added to the game.", true, 0.0f, static_cast<float> (kGameMaxPlayers));
+inline ConVar cv_compat_auto ("compat_auto", "1",
+  "Detects other bot systems (YaPB, SYPB, E-Bot, PODBot, ZBot, FAPB) at map start and sets abpb_quota/abpb_autovacate to 0 to prevent double-filling. Only one bot system should manage bots at a time.");
 inline ConVar cv_quota_mode ("quota_mode", "normal", "Specifies the type of quota.\nAllowed values: 'normal', 'fill', and 'match'.\nIf 'fill', the server will adjust bots to keep N players in the game.\nIf 'match', the server will maintain a certain number of bots relative to humans.", false);
 inline ConVar cv_quota_match ("quota_match", "0", "Number of players to match if abpb_quota_mode is set to 'match'.", true, 0.0f, static_cast<float> (kGameMaxPlayers));
 inline ConVar cv_think_fps ("think_fps", "40.0", "Specifies how many times per second the bot code will run.", true, 10.0f, 90.0f);

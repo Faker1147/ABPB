@@ -48,7 +48,13 @@ YSTL_FORCE_STACK_ALIGN void HandlerEngClientCommand (edict_t *ent, char const *f
   // case it's a bot asking for a client command, we handle it like we do for bot commands
 
   if (!bot::game.IsNullEntity (ent)) {
-    if (bot::bots[ent] || bot::game.IsFakeClientEntity (ent) || (ent->v.flags & FL_DORMANT)) {
+    // Only ABPB bots (and, when no other bot manager is present, any fake
+    // client) may have their client commands suppressed. Never swallow the
+    // commands of bots owned by YaPB/SYPB/E-Bot/etc.
+    const bool is_abpb_bot = bot::bots[ent] != nullptr;
+    const bool foreign_fake = bot::game.IsFakeClientEntity (ent) && !is_abpb_bot;
+
+    if (is_abpb_bot || (foreign_fake && !bot::game.HasOtherBotSystems ()) || (ent->v.flags & FL_DORMANT)) {
       if (bot::game.Is (bot::GameFlags::Metamod)) {
         RETURN_META (MRES_SUPERCEDE); // prevent bot::bots to be forced to issue client commands
       }
@@ -323,8 +329,11 @@ YSTL_EXPORT int GetEntityAPI (gamefuncs_t *table, int interface_version) {
       return;
     }
 
-    // record stuff about radio and chat
-    bot::bots.CaptureChatRadio (engfuncs.pfnCmd_Argv (0), engfuncs.pfnCmd_Argv (1), ent);
+    // record stuff about radio and chat, but ignore commands issued by other
+    // bot systems' fake clients
+    if (!bot::game.IsFakeClientEntity (ent) || bot::bots[ent]) {
+      bot::bots.CaptureChatRadio (engfuncs.pfnCmd_Argv (0), engfuncs.pfnCmd_Argv (1), ent);
+    }
 
     if (bot::game.Is (bot::GameFlags::Metamod)) {
       RETURN_META (MRES_IGNORED);
@@ -761,7 +770,12 @@ YSTL_C_LINKAGE int GetEngineFunctions (enginefuncs_t *table, int *) {
     // as it will crash your server. Why would you, anyway ? bot::bots have no client DLL as far as
     // we know, right ? But since stupidity rules this world, we do a preventive check :)
 
-    if (bot::game.IsFakeClientEntity (ent)) {
+    const bool is_abpb_bot = bot::bots[ent] != nullptr;
+
+    // Suppress prints to ABPB bots, and to any fake client when ABPB is the
+    // only bot manager. When other bots are present, let their own plugin
+    // handle the print instead of swallowing it here.
+    if (is_abpb_bot || (!bot::game.HasOtherBotSystems () && bot::game.IsFakeClientEntity (ent))) {
       if (bot::game.Is (bot::GameFlags::Metamod)) {
         RETURN_META (MRES_SUPERCEDE);
       }

@@ -77,6 +77,9 @@ void Game::LevelInitialize (edict_t *entities, int max) {
   conf.LoadMapSpecificConfig ();
   HumanCopycat::LevelStart ();
 
+  // if another bot system is present, do not compete for the same slots
+  DetectOtherBotSystems ();
+
   // do level initialization stuff here
   graph.LoadGraphData ();
 
@@ -174,6 +177,50 @@ void Game::LevelInitialize (edict_t *entities, int max) {
   // reset some timers
   one_second_timer_.invalidate ();
   half_second_timer_.invalidate ();
+}
+
+void Game::DetectOtherBotSystems () {
+  // Names used by the common third-party bot systems. Presence of any one of
+  // them means another plugin is managing fake clients on this server.
+  static constexpr ystl::StringRef kOtherBotCvars[] = {
+    "yb_quota", "yb_version", "yapb_quota", "yapb_version",
+    "sypb_quota", "sypb_version",
+    "fapb_quota", "fapb_version",
+    "ebot_quota", "ebot_version", "cs_ebot_quota",
+    "podbot_quota", "podbot_version", "pb_quota", "pb_version",
+    "zbot_quota", "zbot_version", "zb_quota", "zb_version",
+    "realbot_quota", "realbot_version"
+  };
+
+  ystl::String detected {};
+  for (const auto &name : kOtherBotCvars) {
+    ConVarRef ref (name);
+    if (!ref.Exists ()) {
+      continue;
+    }
+    if (!detected.empty ()) {
+      detected.append (", ");
+    }
+    detected.append (name);
+  }
+
+  other_bot_systems_ = !detected.empty ();
+  if (!other_bot_systems_) {
+    return;
+  }
+
+  if (cv_compat_auto) {
+    cv_quota.Set (0);
+    cv_autovacate.Set (0);
+    ystl::logger.message ("[ABPB] Other bot system detected (%s). Running multiple bot managers is not supported; "
+                          "abpb_quota and abpb_autovacate were set to 0. Set abpb_compat_auto 0 to override.",
+      detected.chars ());
+  }
+  else {
+    ystl::logger.message ("[ABPB] Other bot system detected (%s). abpb_compat_auto is 0; quotas were left unchanged. "
+                          "Only one bot system should manage bots at a time.",
+      detected.chars ());
+  }
 }
 
 void Game::OnSpawnEntity (edict_t *ent) {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.3-abpb.1
+
+- Compatibility guard: detect YaPB/SYPB/FAPB/E-Bot/PODBot/ZBot/RealBot cvars at map start and set `abpb_quota`/`abpb_autovacate` to 0, preventing two bot managers from filling the same slots.
+- Do not intercept client commands or console prints belonging to other bot systems' fake clients.
+- Documentation now states that side-by-side installation is supported, but only one bot system should actively manage bots.
+
 ## 4.3.3
 
 - CT searches through Dust2 Tunnel, T-Spawn and Pit, with objective/contact priorities and rotating participation.

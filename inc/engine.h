@@ -224,6 +224,7 @@ private:
   EngineWrap engine_wrap_ {};
 
   bool precached_ {};
+  bool other_bot_systems_ {};
 
   GameFlags game_flags_ {};
   MapFlags map_flags_ {};
@@ -241,6 +242,14 @@ public:
 
   // initialize levels
   void LevelInitialize (edict_t *entities, int max);
+
+  // detect other bot systems loaded through metamod, so we never double-fill
+  void DetectOtherBotSystems ();
+
+  // another bot system is active on this server
+  bool HasOtherBotSystems () const {
+    return other_bot_systems_;
+  }
 
   // when entity spawns
   void OnSpawnEntity (edict_t *ent);
