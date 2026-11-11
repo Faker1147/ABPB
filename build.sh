@@ -136,7 +136,7 @@ needs_m32_check() {
   local d
   for d in "${EXTRA_D[@]}"; do
     case "$d" in
-      *AIBO_64BIT=ON*|*AIBO_64BIT:BOOL=ON*|*AIBO_64BIT=TRUE*) return 1 ;;
+      *ABPB_64BIT=ON*|*ABPB_64BIT:BOOL=ON*|*ABPB_64BIT=TRUE*) return 1 ;;
     esac
   done
   return 0
@@ -186,7 +186,7 @@ fi
 
 CONFIGURE_ARGS=()
 if [[ "$NATIVE" == "ON" ]]; then
-  CONFIGURE_ARGS+=("-DAIBO_NATIVE=ON")
+  CONFIGURE_ARGS+=("-DABPB_NATIVE=ON")
 fi
 
 cmake --preset "$PRESET" "${CONFIGURE_ARGS[@]}" "${EXTRA_D[@]}"

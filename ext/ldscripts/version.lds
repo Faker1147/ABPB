@@ -1,4 +1,4 @@
-AIBO_ABI_1.0 {
+ABPB_ABI_1.0 {
    global: 
       Meta_*;
       Server_*;

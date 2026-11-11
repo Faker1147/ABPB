@@ -6,7 +6,7 @@
 #include <string>
 #include <tuple>
 #include <vector>
-#include <aibo.h>
+#include <abpb.h>
 namespace bot {
 namespace {
 struct FinalActor {

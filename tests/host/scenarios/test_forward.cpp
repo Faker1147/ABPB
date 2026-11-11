@@ -1,5 +1,5 @@
 //
-// AiBo test host: gamedll forwarding scenario.
+// ABPB test host: gamedll forwarding scenario.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -18,10 +18,10 @@ namespace bot {
 
 TEST_CASE ("forward/hooks") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

@@ -1,5 +1,5 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
@@ -7,7 +7,7 @@
 
 #pragma once
 
-// the gravity aibo_fun_mode imonmars sets on the server
+// the gravity abpb_fun_mode imonmars sets on the server
 namespace bot {
 
 constexpr float kFunMarsGravity = 325.0f;

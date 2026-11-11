@@ -1,10 +1,12 @@
 # AiBo 4.3.3 — Artificial Intelligence Bot
 
+> **Catatan:** dokumen ini adalah README AiBo asli yang dipertahankan untuk riwayat. Untuk ABPB, lihat [README.md](README.md) atau [README-ABPB-CN.md](README-ABPB-CN.md). Nama perintah dan cvar ABPB sekarang memakai awalan `abpb_`.
+
 **Bot Counter-Strike 1.6 berbasis YaPB dengan Human Aim, navigasi hibrida dan pembelajaran lokal.**
 
 **Pembuat dan pengelola proyek AiBo: K9_einzwei** (GitHub: [keinzwei](https://github.com/keinzwei)).
 
-[English](README.md) · [Unduh installer](https://github.com/keinzwei/AiBo/releases/tag/v4.3.3) · [Panduan build](docs/human-copycat/BUILD.md) · [Kredit](CREDITS.md)
+[English](README.md) · [Unduh ABPB](https://github.com/Faker1147/ABPB/releases) · [Panduan build](docs/human-copycat/BUILD.md) · [Kredit](CREDITS.md)
 
 AiBo adalah fork komunitas independen yang menggabungkan fondasi YaPB dengan Human Copycat. Pemrosesan perilaku dan pembelajaran berjalan lokal saat pertandingan, tanpa GPU, Python saat bermain, LLM, atau langganan API.
 
@@ -43,4 +45,4 @@ Catatan paket menyebut 293 tes kode dan 11 skenario installer lulus pada Linux, 
 
 Lihat [README utama](README.md) untuk pengaturan, perintah build dan indeks panduan. Laporan bug serta kontribusi diterima di repository ini.
 
-Dibuat dan dikelola oleh **K9_einzwei** (GitHub: [keinzwei](https://github.com/keinzwei)), dengan kredit kepada YaPB/jeefo, tim YaPB, PODBot/Count Floyd, RealBot Human Copycat, pembuat graph dan kontributor dependensi. Fork gabungan memakai GPL-2.0-or-later sebagaimana dinyatakan dalam pemberitahuan paket; setiap komponen mempertahankan lisensinya. Lihat [CREDITS.md](CREDITS.md), [LICENSE](LICENSE) dan [NOTICE-AiBo.md](NOTICE-AiBo.md).
+Dibuat dan dikelola oleh **K9_einzwei** (GitHub: [keinzwei](https://github.com/keinzwei)), dengan kredit kepada YaPB/jeefo, tim YaPB, PODBot/Count Floyd, RealBot Human Copycat, pembuat graph dan kontributor dependensi. Fork gabungan memakai GPL-2.0-or-later sebagaimana dinyatakan dalam pemberitahuan paket; setiap komponen mempertahankan lisensinya. Lihat [CREDITS.md](CREDITS.md), [LICENSE](LICENSE) dan [NOTICE-ABPB.md](NOTICE-ABPB.md).

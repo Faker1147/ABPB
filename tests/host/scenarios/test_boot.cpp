@@ -1,5 +1,5 @@
 //
-// AiBo test host: boot smoke scenario.
+// ABPB test host: boot smoke scenario.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -20,12 +20,12 @@ namespace bot {
 
 TEST_CASE ("boot/full_cycle") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // preload the staged fake gamedll globally so FakeCS_* resolve;
-  // aibo loads the same file afterwards (refcounted, same image)
+  // abpb loads the same file afterwards (refcounted, same image)
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   // engine -> bot linkage (runs postload + cs binary load + hook install)

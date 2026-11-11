@@ -1,5 +1,5 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
@@ -238,7 +238,7 @@ public:
   // translates bot message into needed language
   const char *Translate (ystl::StringRef input);
 
-  // strings requested for translation, but missing from the language file (see 'aibo debug translate')
+  // strings requested for translation, but missing from the language file (see 'abpb debug translate')
   const ystl::HashMap<uint32_t, ystl::String, ystl::Hash<int32_t>> &MissingTranslations () const {
     return missing_translations_;
   }

@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/engine_{tables,entities,round}.
+// ABPB test host: unit/engine_{tables,entities,round}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -8,7 +8,7 @@
 // game-state timing (postload prefix).
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -18,7 +18,7 @@ namespace bot {
 
 TEST_CASE ("unit/engine_tables") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   testhost::InstallEngineTables (engine);
 
   // engine string interop: offsets roundtrip through the string table
@@ -202,7 +202,7 @@ TEST_CASE ("unit/engine_tables") {
 
 TEST_CASE ("unit/engine_entities") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // map entities before activation: the level scan derives map flags
   // and the breakable seed list from them
@@ -218,7 +218,7 @@ TEST_CASE ("unit/engine_entities") {
   seeded->v.movetype = MOVETYPE_PUSH;
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -463,11 +463,11 @@ TEST_CASE ("unit/engine_entities") {
 
 TEST_CASE ("unit/engine_round") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   testhost::InstallEngineTables (engine);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -521,7 +521,7 @@ TEST_CASE ("unit/engine_round") {
 TEST_CASE ("unit/engine_visibility") {
   // hermetic visibility + software renderer + trace model, no cs load
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   testhost::InstallEngineTables (engine);
 
   // xash always uses hw structures
@@ -608,7 +608,7 @@ TEST_CASE ("unit/engine_visibility") {
 TEST_CASE ("unit/engine_spawn") {
   // level scan branches + spawn hooks, one activation
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   edict_t *strip = engine.SpawnEntity ("player_weaponstrip");
   HOST_REQUIRE (strip != nullptr);
   edict_t *ct_spawn = engine.SpawnEntity ("info_player_start");
@@ -634,7 +634,7 @@ TEST_CASE ("unit/engine_spawn") {
   brk->v.movetype = MOVETYPE_PUSH;
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
   HOST_REQUIRE (cs.entered () != 0);
@@ -708,7 +708,7 @@ TEST_CASE ("unit/engine_spawn") {
 TEST_CASE ("unit/engine_bomb") {
   // demolition search + grenade kinds, full prefix
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   edict_t *bomb_target = engine.SpawnEntity ("func_bomb_target");
   HOST_REQUIRE (bomb_target != nullptr);
   // early false before demolition is known
@@ -720,7 +720,7 @@ TEST_CASE ("unit/engine_bomb") {
   CHECK (!game.IsBombEntity (nullptr));
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
   HOST_REQUIRE (cs.entered () != 0);
@@ -812,9 +812,9 @@ TEST_CASE ("unit/engine_bomb") {
 TEST_CASE ("unit/engine_hud") {
   // long splits + hud + box, full prefix
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
   HOST_REQUIRE (cs.entered () != 0);
@@ -878,9 +878,9 @@ TEST_CASE ("unit/engine_hud") {
 TEST_CASE ("unit/engine_command") {
   // bot command parsing edges, full prefix without level
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
   HOST_REQUIRE (cs.entered () != 0);
@@ -928,13 +928,13 @@ TEST_CASE ("unit/engine_command") {
 TEST_CASE ("unit/engine_flag [modern]") {
   // version + healthy env, modern prefix without level
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "-modern/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "-modern/cstrike");
   engine.SetDedicatedServer (false);
   engine.SetCvar ("host_hl25_extended_structs", "1");
   engine.SetCvar ("sv_userinfo_transmitted_fields", "1");
   engine.SetCvar ("sv_rcon_whitelist_address", "1");
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_GAMEDIR "-modern/cstrike/dlls/" AIBO_TEST_CSSUFFIX, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs ("cstrike/dlls/" ABPB_TEST_CSSUFFIX, cs));
   cs.reset ();
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
   HOST_REQUIRE (cs.entered () != 0);
@@ -989,14 +989,14 @@ TEST_CASE ("unit/engine_flag [modern]") {
 TEST_CASE ("unit/engine_bounds") {
   // cvar stack + platform names, full prefix without level
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   // anniversary + gold client must exist before postload caches them
   engine.SetCvar ("host_hl25_extended_structs", "1");
   engine.SetDedicatedServer (false);
   engine.SetCvar ("sv_userinfo_transmitted_fields", "1");
   engine.SetCvar ("sv_rcon_whitelist_address", "1");
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
   HOST_REQUIRE (cs.entered () != 0);
@@ -1107,7 +1107,7 @@ TEST_CASE ("unit/engine_bounds") {
 TEST_CASE ("unit/engine_probe") {
   // modes + search + frame + shutdown, full prefix
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   // sphere early out before start entity exists
   bool sphere_called = false;
   game.SearchEntities (ystl::Vector (), 100.0f, [&] (edict_t *) {
@@ -1128,7 +1128,7 @@ TEST_CASE ("unit/engine_probe") {
   CHECK (!game.IsBreakableEntity (seedless, false));
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
   HOST_REQUIRE (cs.entered () != 0);
@@ -1215,10 +1215,10 @@ TEST_CASE ("unit/engine_probe") {
 TEST_CASE ("unit/engine_postload") {
   // metamod unload path, dedicated prefix
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   game.AddGameFlag (GameFlags::Metamod);
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
   // under metamod the gamedll is not entered
@@ -1230,7 +1230,7 @@ TEST_CASE ("unit/engine_postload") {
   const bool saved_android = ystl::plat.android;
   ystl::plat.android = true;
   testhost::FakeCSApi cs2 {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs2));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs2));
   cs2.reset ();
   // second give uses the same engine tables, still no enter
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -1241,7 +1241,7 @@ TEST_CASE ("unit/engine_postload") {
   game.ClearGameFlag (GameFlags::Mobility);
   game.ClearGameFlag (GameFlags::HasBotVoice);
   game.ClearGameFlag (GameFlags::ReGameDLL);
-  // the gamedll stays loaded: under metamod no aibo ref holds it, so closing both would unload it (dlclose crash on some toolchains)
+  // the gamedll stays loaded: under metamod no abpb ref holds it, so closing both would unload it (dlclose crash on some toolchains)
   bots.Destroy ();
 }
 

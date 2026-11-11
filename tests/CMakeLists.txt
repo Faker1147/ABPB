@@ -1,5 +1,5 @@
 #
-# AiBo test suite (fake engine harness)
+# ABPB test suite (fake engine harness)
 #
 # SPDX-License-Identifier: Unlicense
 #
@@ -7,8 +7,8 @@
 # skips TLS (vendored mbedtls is unnecessary weight for the harness).
 #
 
-if(NOT AIBO_64BIT)
-  message(FATAL_ERROR "AIBO_BUILD_TESTS requires -DAIBO_64BIT=ON (32-bit string_t layout is unsupported by the harness)")
+if(NOT ABPB_64BIT)
+  message(FATAL_ERROR "ABPB_BUILD_TESTS requires -DABPB_64BIT=ON (32-bit string_t layout is unsupported by the harness)")
 endif()
 
 add_subdirectory(host)
@@ -25,6 +25,11 @@ add_executable(aim_baseline_current aim_baseline_trace.cpp
   "${PROJECT_SOURCE_DIR}/src/copycat/copycat_core.cpp" "${PROJECT_SOURCE_DIR}/src/copycat/copycat_lite.cpp")
 target_include_directories(aim_baseline_current PRIVATE "${PROJECT_SOURCE_DIR}/src/copycat")
 set_target_properties(aim_baseline_current PROPERTIES CXX_STANDARD 20)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  # the fixture was recorded without fused multiply-add; keep the trace
+  # bit-comparable across compilers and -march settings
+  target_compile_options(aim_baseline_current PRIVATE -ffp-contract=off)
+endif()
 add_test(NAME aim_baseline_compatibility COMMAND ${Python3_EXECUTABLE}
   "${CMAKE_CURRENT_SOURCE_DIR}/compare_aim_baseline.py" "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/aim_baseline.csv" $<TARGET_FILE:aim_baseline_current>)
 
@@ -72,9 +77,9 @@ add_executable(rbcc_routes rbcc_routes_test.cpp
 set_target_properties(rbcc_routes PROPERTIES CXX_STANDARD 11)
 add_test(NAME rbcc_routes COMMAND rbcc_routes)
 set_tests_properties(rbcc_routes PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/rbcc")
-if(AIBO_SANITIZE)
+if(ABPB_SANITIZE)
   foreach(rbcc_target rbcc_portable rbcc_lite rbcc_routes copycat_learning explore_dialogue copycat_final copycat_aim)
-    target_compile_options(${rbcc_target} PRIVATE -fsanitize=${AIBO_SANITIZE} -fno-omit-frame-pointer -O1)
-    target_link_options(${rbcc_target} PRIVATE -fsanitize=${AIBO_SANITIZE})
+    target_compile_options(${rbcc_target} PRIVATE -fsanitize=${ABPB_SANITIZE} -fno-omit-frame-pointer -O1)
+    target_link_options(${rbcc_target} PRIVATE -fsanitize=${ABPB_SANITIZE})
   endforeach()
 endif()

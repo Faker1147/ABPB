@@ -1,5 +1,5 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
@@ -12,8 +12,8 @@ namespace bot {
 
 constexpr char kPodbotMagic[8] = { 'P', 'O', 'D', 'W', 'A', 'Y', '!', ystl::kNullChar };
 
-constexpr int32_t kStorageMagic = 0x59415042; // storage magic for aibo-data files
-constexpr int32_t kStorageMagicUB = 0x544f4255; // support also the fork format (merged back into aibo)
+constexpr int32_t kStorageMagic = 0x59415042; // storage magic for abpb-data files
+constexpr int32_t kStorageMagicUB = 0x544f4255; // support also the fork format (merged back into abpb)
 
 // storage header options
 enum class StorageOption : int32_t {

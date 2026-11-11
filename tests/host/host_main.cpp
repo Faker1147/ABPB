@@ -1,5 +1,5 @@
 //
-// AiBo test host entry point (ystl framework runner).
+// ABPB test host entry point (ystl framework runner).
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -21,11 +21,11 @@ int main (int argc, char **argv) {
 #endif
   // ctest sets this; default it for manual runs so the bot worker pool does
   // not alter timing-sensitive scenarios
-  if (ystl::plat.env ("AIBO_SINGLE_THREADED")[0] == '\0') {
+  if (ystl::plat.env ("ABPB_SINGLE_THREADED")[0] == '\0') {
 #if defined(YSTL_WINDOWS)
-    _putenv_s ("AIBO_SINGLE_THREADED", "1");
+    _putenv_s ("ABPB_SINGLE_THREADED", "1");
 #else
-    setenv ("AIBO_SINGLE_THREADED", "1", 1);
+    setenv ("ABPB_SINGLE_THREADED", "1", 1);
 #endif
   }
 

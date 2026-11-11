@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/radio_{orders,chatter}.
+// ABPB test host: unit/radio_{orders,chatter}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -9,7 +9,7 @@
 // literal-chance branches stay out on flake risk.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -147,9 +147,9 @@ void BuildRadioGraph () {
 }
 
 void BootRadio (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -1147,13 +1147,13 @@ TEST_CASE ("unit/radio_kill") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // demolition flag for the camping callouts, before activate
   edict_t *target = engine.SpawnEntity ("func_bomb_target");
   HOST_REQUIRE (target != nullptr);
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

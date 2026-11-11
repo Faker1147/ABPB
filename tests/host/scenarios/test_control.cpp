@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/control_{cmds,graph,debug}.
+// ABPB test host: unit/control_{cmds,graph,debug}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -10,7 +10,7 @@
 // exact modes and extreme chances, never asserted on.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -59,9 +59,9 @@ void BuildControlGraph () {
 }
 
 void BootControl (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -189,27 +189,27 @@ TEST_CASE ("unit/control_cmds") {
 
   // ...bare prefix lists, help pages, unknown names...
   size_t mark = PrintMark (engine);
-  RunCmd (engine, { "aibo" });
+  RunCmd (engine, { "abpb" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "valid commands"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "help" });
+  RunCmd (engine, { "abpb", "help" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Command:"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "help", "kick" });
+  RunCmd (engine, { "abpb", "help", "kick" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "kick"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "help", "nosuchcmd" });
+  RunCmd (engine, { "abpb", "help", "nosuchcmd" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "No help found"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "frobnicate" });
+  RunCmd (engine, { "abpb", "frobnicate" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Unknown command"));
 
@@ -220,7 +220,7 @@ TEST_CASE ("unit/control_cmds") {
   // handleEngineCommands always re-issues as console, drive the gate directly...
   {
     ystl::Array<ystl::String> args {};
-    args.push ("aibo");
+    args.push ("abpb");
     args.push ("version");
     engine.SetCmdArgs (args);
     ctrl.CollectArgs ();
@@ -230,60 +230,60 @@ TEST_CASE ("unit/control_cmds") {
   }
   mark = PrintMark (engine);
   DrainPrints (engine);
-  CHECK (!PrintedSince (engine, mark, "AiBo v"));
+  CHECK (!PrintedSince (engine, mark, "ABPB v"));
   ctrl.SetIssuer (nullptr);
 
   // ...version and list always answer...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "version" });
+  RunCmd (engine, { "abpb", "version" });
   DrainPrints (engine);
-  CHECK (PrintedSince (engine, mark, "AiBo v"));
+  CHECK (PrintedSince (engine, mark, "ABPB v"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "list" });
+  RunCmd (engine, { "abpb", "list" });
   DrainPrints (engine);
 
   // ...bad formats are reported, not executed...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "fill" });
+  RunCmd (engine, { "abpb", "fill" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "vote" });
+  RunCmd (engine, { "abpb", "vote" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "weaponmode" });
+  RunCmd (engine, { "abpb", "weaponmode" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "weaponmode", "railgun" });
+  RunCmd (engine, { "abpb", "weaponmode", "railgun" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "fun" });
+  RunCmd (engine, { "abpb", "fun" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "fun", "nosuchmode" });
+  RunCmd (engine, { "abpb", "fun", "nosuchmode" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   // ...bots join through the command and answer roll calls...
-  RunCmd (engine, { "aibo", "addbot" });
+  RunCmd (engine, { "abpb", "addbot" });
   HOST_REQUIRE (testhost::PumpBots (engine, 1));
   CHECK (bots.GetBotCount () == 1);
 
-  RunCmd (engine, { "aibo", "fill", "1" });
+  RunCmd (engine, { "abpb", "fill", "1" });
   HOST_REQUIRE (testhost::PumpBots (engine, 2));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "vote", "3" });
+  RunCmd (engine, { "abpb", "vote", "3" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "vote for map #3"));
 
@@ -297,12 +297,12 @@ TEST_CASE ("unit/control_cmds") {
 
   // ...fun and weapon modes apply...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "fun", "tronisback" });
+  RunCmd (engine, { "abpb", "fun", "tronisback" });
   DrainPrints (engine);
   CHECK (cv_fun_mode.As<ystl::StringRef> () == "tronisback"); // applied on the next frame
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "weaponmode", "knife" });
+  RunCmd (engine, { "abpb", "weaponmode", "knife" });
   DrainPrints (engine);
   CHECK (!PrintedSince (engine, mark, "Incorrect usage"));
 
@@ -313,7 +313,7 @@ TEST_CASE ("unit/control_cmds") {
   });
   cv_quota.Set (2); // pin quota so the kicked bot is not re-added
   const size_t sc_base = engine.ServerCommands ().size ();
-  RunCmd (engine, { "aibo", "kick" });
+  RunCmd (engine, { "abpb", "kick" });
   DrainPrints (engine);
 
   // harness never processes the disconnect, the contract is the
@@ -326,12 +326,12 @@ TEST_CASE ("unit/control_cmds") {
   CHECK (kick_issued);
   CHECK (cv_quota.As<int> () == 1);
 
-  RunCmd (engine, { "aibo", "kickbots", "instant" });
+  RunCmd (engine, { "abpb", "kickbots", "instant" });
   DrainPrints (engine);
   CHECK (cv_quota.As<int> () == 0);
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "killbots" });
+  RunCmd (engine, { "abpb", "killbots" });
   DrainPrints (engine);
 
   // killing runs through the damage chain (async), the order is the contract...
@@ -340,16 +340,16 @@ TEST_CASE ("unit/control_cmds") {
   // ...cvars list, filter, revert and persist...
   cv_quota.Set (3);
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "cvars", "quota" });
+  RunCmd (engine, { "abpb", "cvars", "quota" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "quota"));
 
-  RunCmd (engine, { "aibo", "cvars", "defaults" });
+  RunCmd (engine, { "abpb", "cvars", "defaults" });
   DrainPrints (engine);
   CHECK (cv_quota.As<int> () == 9);
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "cvars", "save" });
+  RunCmd (engine, { "abpb", "cvars", "save" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "written to file"));
 
@@ -363,7 +363,7 @@ TEST_CASE ("unit/control_cmds") {
   }
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "show_custom" });
+  RunCmd (engine, { "abpb", "show_custom" });
   DrainPrints (engine);
 
   bots.Destroy ();
@@ -379,42 +379,42 @@ TEST_CASE ("unit/control_graph") {
   // graph help via the full name (must not be shadowed by the earlier
   // "graphmenu" entry) and via the "g" alias...
   size_t mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "graph", "help" });
+  RunCmd (engine, { "abpb", "graph", "help" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "save"));
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "help" });
+  RunCmd (engine, { "abpb", "g", "help" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "save"));
 
   // dedicated servers without an editor only allow the safe subset...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g" });
+  RunCmd (engine, { "abpb", "g" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Unable to use graph edit"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "frobnicate" });
+  RunCmd (engine, { "abpb", "g", "frobnicate" });
   DrainPrints (engine);
 
   // ...health checks and stats read the live graph...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "check" });
+  RunCmd (engine, { "abpb", "g", "check" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Graph seems to be OK"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "stats" });
+  RunCmd (engine, { "abpb", "g", "stats" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Nodes:"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "fileinfo" });
+  RunCmd (engine, { "abpb", "g", "fileinfo" });
   DrainPrints (engine);
 
   // ...editor rights need a live player, console is refused...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "acquire_editor" });
+  RunCmd (engine, { "abpb", "g", "acquire_editor" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "HLDS console"));
 
@@ -422,72 +422,72 @@ TEST_CASE ("unit/control_graph") {
   HOST_REQUIRE (!game.IsNullEntity (editor));
   clients.Update ();
   clients[editor].flags |= ClientFlags::Admin;
-  RunCmdAs (engine, editor, { "aibo", "g", "acquire_editor" });
+  RunCmdAs (engine, editor, { "abpb", "g", "acquire_editor" });
   DrainPrints (engine);
   CHECK (graph.HasEditor ());
   CHECK (graph.GetEditor () == editor);
 
   // ...with an editor aboard, console drives the rest...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g" });
+  RunCmd (engine, { "abpb", "g" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Graph Status"));
 
   // ...radius and cache pin nodes...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "setradius" });
+  RunCmd (engine, { "abpb", "g", "setradius" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
-  RunCmd (engine, { "aibo", "g", "setradius", "48", "2" });
+  RunCmd (engine, { "abpb", "g", "setradius", "48", "2" });
   DrainPrints (engine);
   CHECK (graph.paths_[2].radius == 48.0f);
 
-  RunCmd (engine, { "aibo", "g", "cache", "3" });
+  RunCmd (engine, { "abpb", "g", "cache", "3" });
   DrainPrints (engine);
 
   // ...editor display modes store and restore game cvars...
   const float roundtime_before = mp_roundtime.As<float> ();
-  RunCmd (engine, { "aibo", "g", "on" });
+  RunCmd (engine, { "abpb", "g", "on" });
   DrainPrints (engine);
   CHECK (graph.HasEditFlag (GraphEdit::On));
   CHECK (mp_roundtime.As<float> () == 0.0f);
 
-  RunCmd (engine, { "aibo", "g", "off" });
+  RunCmd (engine, { "abpb", "g", "off" });
   DrainPrints (engine);
   CHECK (!graph.HasEditFlag (GraphEdit::On));
   CHECK (mp_roundtime.As<float> () == roundtime_before);
 
-  RunCmdAs (engine, editor, { "aibo", "g", "on", "noclip" });
+  RunCmdAs (engine, editor, { "abpb", "g", "on", "noclip" });
   DrainPrints (engine);
   CHECK (editor->v.movetype == MOVETYPE_NOCLIP);
 
-  RunCmdAs (engine, editor, { "aibo", "g", "off", "noclip" });
+  RunCmdAs (engine, editor, { "abpb", "g", "off", "noclip" });
   DrainPrints (engine);
   CHECK (editor->v.movetype == MOVETYPE_WALK);
 
   // ...teleport validates before moving the editor...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "teleport" });
+  RunCmd (engine, { "abpb", "g", "teleport" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "teleport", "99" });
+  RunCmd (engine, { "abpb", "g", "teleport", "99" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Could not teleport"));
 
-  RunCmdAs (engine, editor, { "aibo", "g", "teleport", "5" });
+  RunCmdAs (engine, editor, { "abpb", "g", "teleport", "5" });
   DrainPrints (engine);
   CHECK (editor->v.origin == graph[5].origin);
 
   // ...height shifts, saves, exports, deletes and imports round-trip...
-  RunCmd (engine, { "aibo", "g", "adjust_height", "10" });
+  RunCmd (engine, { "abpb", "g", "adjust_height", "10" });
   DrainPrints (engine);
   CHECK (graph[4].origin.z == 10.0f);
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "save" });
+  RunCmd (engine, { "abpb", "g", "save" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "written to disk"));
 
@@ -498,11 +498,11 @@ TEST_CASE ("unit/control_graph") {
   }
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "export" });
+  RunCmd (engine, { "abpb", "g", "export" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Graph text exported"));
 
-  RunCmd (engine, { "aibo", "g", "delete", "7" });
+  RunCmd (engine, { "abpb", "g", "delete", "7" });
   DrainPrints (engine);
   CHECK (graph.Length () == 7);
 
@@ -514,7 +514,7 @@ TEST_CASE ("unit/control_graph") {
     MirrorControlFile (text_fs, text_vfs);
   }
 
-  RunCmd (engine, { "aibo", "g", "import" });
+  RunCmd (engine, { "abpb", "g", "import" });
   DrainPrints (engine);
   CHECK (graph.Length () == 8);
   CHECK (graph[4].origin.z == 10.0f);
@@ -522,28 +522,28 @@ TEST_CASE ("unit/control_graph") {
   MirrorControlFile (bstor.BuildPath (StorageFile::Graph), bstor.BuildPath (StorageFile::Graph, true));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "load" });
+  RunCmd (engine, { "abpb", "g", "load" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "successfully loaded"));
 
   // ...cleaning runs before erase (erase wipes the live graph too)...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "clean", "all" });
+  RunCmd (engine, { "abpb", "g", "clean", "all" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Done. Processed 8 nodes."));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "clean", "2" });
+  RunCmd (engine, { "abpb", "g", "clean", "2" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Processed node 2"));
 
   // ...erase nags first, then wipes...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "erase" });
+  RunCmd (engine, { "abpb", "g", "erase" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "iamsure"));
 
-  RunCmd (engine, { "aibo", "g", "erase", "iamsure" });
+  RunCmd (engine, { "abpb", "g", "erase", "iamsure" });
   DrainPrints (engine);
 
   {
@@ -554,20 +554,20 @@ TEST_CASE ("unit/control_graph") {
 
   // ...offline refresh degrades to a message, menus open for editors...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "refresh" });
+  RunCmd (engine, { "abpb", "g", "refresh" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "append"));
 
-  RunCmd (engine, { "aibo", "g", "addbasic" });
+  RunCmd (engine, { "abpb", "g", "addbasic" });
   DrainPrints (engine);
 
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   DrainPrints (engine);
   CHECK (clients[editor].MenuId == MenuId::NodeMainPage1);
 
   // ...release frees, then the gate takes over again...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "release_editor" });
+  RunCmd (engine, { "abpb", "g", "release_editor" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "freed"));
   CHECK (!graph.HasEditor ());
@@ -589,12 +589,12 @@ TEST_CASE ("unit/control_debug") {
 
   // translate starts empty and resets cleanly...
   size_t mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "translate" });
+  RunCmd (engine, { "abpb", "debug", "translate" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "No missing translations"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "translate", "reset" });
+  RunCmd (engine, { "abpb", "debug", "translate", "reset" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "cleared"));
 
@@ -615,40 +615,40 @@ TEST_CASE ("unit/control_debug") {
   ctrl.AssignAdminRights (one, nullptr);
   CHECK (!has_flag (clients[one].flags, ClientFlags::Admin));
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "slay" });
+  RunCmd (engine, { "abpb", "debug", "slay" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "slay", "nosuchplayer" });
+  RunCmd (engine, { "abpb", "debug", "slay", "nosuchplayer" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "not found"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "slay", "Dbg" });
+  RunCmd (engine, { "abpb", "debug", "slay", "Dbg" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Multiple players"));
 
   const int kill_base = testhost::CsCalls (cs, "ClientKill");
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "slay", "DbgOne" });
+  RunCmd (engine, { "abpb", "debug", "slay", "DbgOne" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Slaying player"));
   CHECK (testhost::CsCalls (cs, "ClientKill") == kill_base + 1); // stub only records
 
   one->v.health = 0.0f; // fake_cs cannot kill, help it along
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "slay", "DbgOne" });
+  RunCmd (engine, { "abpb", "debug", "slay", "DbgOne" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "not alive"));
 
   // ...slaps push up, lethal slaps kill...
   const float vel_before = two->v.velocity.z;
-  RunCmd (engine, { "aibo", "debug", "slap", "DbgTwo" });
+  RunCmd (engine, { "abpb", "debug", "slap", "DbgTwo" });
   DrainPrints (engine);
   CHECK (two->v.velocity.z == vel_before + 256.0f);
 
-  RunCmd (engine, { "aibo", "debug", "slap", "DbgTwo", "1000" });
+  RunCmd (engine, { "abpb", "debug", "slap", "DbgTwo", "1000" });
   DrainPrints (engine);
   CHECK (!game.IsAliveEntity (two));
 
@@ -656,19 +656,19 @@ TEST_CASE ("unit/control_debug") {
   one->v.health = 100.0f;
   one->v.deadflag = DEAD_NO;
 
-  RunCmd (engine, { "aibo", "debug", "god", "DbgOne" });
+  RunCmd (engine, { "abpb", "debug", "god", "DbgOne" });
   DrainPrints (engine);
   CHECK (!!(one->v.flags & FL_GODMODE));
 
-  RunCmd (engine, { "aibo", "debug", "god", "DbgOne" });
+  RunCmd (engine, { "abpb", "debug", "god", "DbgOne" });
   DrainPrints (engine);
   CHECK (!(one->v.flags & FL_GODMODE));
 
-  RunCmd (engine, { "aibo", "debug", "notarget", "DbgOne" });
+  RunCmd (engine, { "abpb", "debug", "notarget", "DbgOne" });
   DrainPrints (engine);
   CHECK (!!(one->v.flags & FL_NOTARGET));
 
-  RunCmd (engine, { "aibo", "debug", "notarget", "DbgOne" });
+  RunCmd (engine, { "abpb", "debug", "notarget", "DbgOne" });
   DrainPrints (engine);
   CHECK (!(one->v.flags & FL_NOTARGET));
 
@@ -676,7 +676,7 @@ TEST_CASE ("unit/control_debug") {
   // (menus below need the grant, take it before they run)
   clients.Update ();
   clients[one].flags |= ClientFlags::Admin;
-  RunCmd (engine, { "aibo", "addbot" });
+  RunCmd (engine, { "abpb", "addbot" });
   HOST_REQUIRE (testhost::PumpBots (engine, 1));
 
   Bot *bot = nullptr;
@@ -693,23 +693,23 @@ TEST_CASE ("unit/control_debug") {
   const ystl::String bot_name = bot->pev->netname.chars ();
   const int cs_base = cs.call_count ();
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "exec", bot_name.chars (), "say hi" });
+  RunCmd (engine, { "abpb", "debug", "exec", bot_name.chars (), "say hi" });
   DrainPrints (engine);
   CHECK (cs.call_count () > cs_base);
   CHECK (PrintedSince (engine, mark, "Executed command"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "exec" });
+  RunCmd (engine, { "abpb", "debug", "exec" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "memory" });
+  RunCmd (engine, { "abpb", "debug", "memory" });
   DrainPrints (engine);
 
   // ...http diagnostics always answer with resolver/tls/cacert/url lines...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "http" });
+  RunCmd (engine, { "abpb", "debug", "http" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "resolver:"));
   CHECK (PrintedSince (engine, mark, "tls:"));
@@ -720,11 +720,11 @@ TEST_CASE ("unit/control_debug") {
 
   // ...god without a target needs the listenserver host...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "god" });
+  RunCmd (engine, { "abpb", "debug", "god" });
   DrainPrints (engine);
 
   // ...menus open, select and close through the client channel...
-  RunCmdAs (engine, one, { "aibo", "menu" });
+  RunCmdAs (engine, one, { "abpb", "menu" });
   DrainPrints (engine);
   CHECK (clients[one].MenuId == MenuId::Main);
 
@@ -753,7 +753,7 @@ TEST_CASE ("unit/control_debug") {
   }
 
   // ...features menu flips debug, control menu manages the roster...
-  RunCmdAs (engine, one, { "aibo", "menu" });
+  RunCmdAs (engine, one, { "abpb", "menu" });
   DrainPrints (engine);
 
   {
@@ -797,7 +797,7 @@ TEST_CASE ("unit/control_debug") {
 
   clients[one].flags |= ClientFlags::Admin;
   mark = PrintMark (engine);
-  RunCmdAs (engine, one, { "aibo", "version" });
+  RunCmdAs (engine, one, { "abpb", "version" });
   DrainPrints (engine);
   CHECK (ctrl.GetIssuer () == one); // gate passed, issuer kept (prints go client-side)
 
@@ -817,44 +817,44 @@ TEST_CASE ("unit/control_botops") {
 
   // ...upper-case prefix still resolves, first two args fold case...
   size_t mark = PrintMark (engine);
-  RunCmd (engine, { "AIBO", "VERSION" });
+  RunCmd (engine, { "ABPB", "VERSION" });
   DrainPrints (engine);
-  CHECK (PrintedSince (engine, mark, "AiBo v"));
+  CHECK (PrintedSince (engine, mark, "ABPB v"));
 
   // ...help legs: single-name entry skips the alias line, multi-name lists it...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "help", "cvars" });
+  RunCmd (engine, { "abpb", "help", "cvars" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Command:"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "help", "weapons" });
+  RunCmd (engine, { "abpb", "help", "weapons" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Aliases:"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "help", "nosuchcmd" });
+  RunCmd (engine, { "abpb", "help", "nosuchcmd" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "No help found"));
 
   // ...node dispatcher help: known subcommand prints, unknown lists all...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "help", "slay" });
+  RunCmd (engine, { "abpb", "debug", "help", "slay" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Command:"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "help", "nosuchsub" });
+  RunCmd (engine, { "abpb", "debug", "help", "nosuchsub" });
   DrainPrints (engine);
 
   // ...addbot alias legs: _ct pins the team, addhs maxes the skill...
-  RunCmd (engine, { "aibo", "add_ct" });
+  RunCmd (engine, { "abpb", "add_ct" });
   HOST_REQUIRE (testhost::PumpBots (engine, 1));
 
-  RunCmd (engine, { "aibo", "add_t" });
+  RunCmd (engine, { "abpb", "add_t" });
   HOST_REQUIRE (testhost::PumpBots (engine, 2));
 
-  RunCmd (engine, { "aibo", "addhs" });
+  RunCmd (engine, { "abpb", "addhs" });
   HOST_REQUIRE (testhost::PumpBots (engine, 3));
   CHECK (bots.GetBotCount () == 3);
 
@@ -877,17 +877,17 @@ TEST_CASE ("unit/control_botops") {
 
   // ...kick legs: team aliases, numeric and name teams, then the plain one...
   const size_t sc_base = engine.ServerCommands ().size ();
-  RunCmd (engine, { "aibo", "kick_ct" });
-  RunCmd (engine, { "aibo", "kick_t" });
-  RunCmd (engine, { "aibo", "kick", "2" });
-  RunCmd (engine, { "aibo", "kick", "ct" });
-  RunCmd (engine, { "aibo", "kick", "1" });
-  RunCmd (engine, { "aibo", "kick", "t" });
+  RunCmd (engine, { "abpb", "kick_ct" });
+  RunCmd (engine, { "abpb", "kick_t" });
+  RunCmd (engine, { "abpb", "kick", "2" });
+  RunCmd (engine, { "abpb", "kick", "ct" });
+  RunCmd (engine, { "abpb", "kick", "1" });
+  RunCmd (engine, { "abpb", "kick", "t" });
   DrainPrints (engine);
   CHECK (bots.GetBotCount () == 3); // kicks are record-only, the roster stays
 
   cv_quota.Set (10);
-  RunCmd (engine, { "aibo", "kick" });
+  RunCmd (engine, { "abpb", "kick" });
   DrainPrints (engine);
   CHECK (cv_quota.As<int> () == 9);
 
@@ -899,13 +899,13 @@ TEST_CASE ("unit/control_botops") {
   CHECK (kick_seen);
 
   // ...kickbots legs: instant wipes the quota, team aliases trim by team...
-  RunCmd (engine, { "aibo", "kickall_ct" });
-  RunCmd (engine, { "aibo", "kickall_t" });
-  RunCmd (engine, { "aibo", "removebots", "instant", "2" });
+  RunCmd (engine, { "abpb", "kickall_ct" });
+  RunCmd (engine, { "abpb", "kickall_t" });
+  RunCmd (engine, { "abpb", "removebots", "instant", "2" });
   DrainPrints (engine);
 
   cv_quota.Set (10);
-  RunCmd (engine, { "aibo", "removebots", "instant" });
+  RunCmd (engine, { "abpb", "removebots", "instant" });
   DrainPrints (engine);
   CHECK (cv_quota.As<int> () == 0);
   cv_quota.Set (10);
@@ -917,23 +917,23 @@ TEST_CASE ("unit/control_botops") {
   });
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "kill_ct" });
+  RunCmd (engine, { "abpb", "kill_ct" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "All bots died"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "kill_t" });
+  RunCmd (engine, { "abpb", "kill_t" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "All bots died"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "kill", "1", "silent" });
-  RunCmd (engine, { "aibo", "kill", "2", "si" });
+  RunCmd (engine, { "abpb", "kill", "1", "silent" });
+  RunCmd (engine, { "abpb", "kill", "2", "si" });
   DrainPrints (engine);
   CHECK (!PrintedSince (engine, mark, "All bots died"));
 
   // ...fill with every arg covers the full-arg leg...
-  RunCmd (engine, { "aibo", "fill", "1", "1", "2", "1" });
+  RunCmd (engine, { "abpb", "fill", "1", "1", "2", "1" });
   HOST_REQUIRE (testhost::PumpBots (engine, 4));
 
   // ...every weapon mode applies without a format complaint...
@@ -941,7 +941,7 @@ TEST_CASE ("unit/control_botops") {
 
   for (int i = 0; i < 7; ++i) {
     mark = PrintMark (engine);
-    RunCmd (engine, { "aibo", "weaponmode", kModes[i] });
+    RunCmd (engine, { "abpb", "weaponmode", kModes[i] });
     DrainPrints (engine);
     CHECK (!PrintedSince (engine, mark, "Incorrect usage"));
   }
@@ -951,7 +951,7 @@ TEST_CASE ("unit/control_botops") {
 
   for (int i = 0; i < 8; ++i) {
     mark = PrintMark (engine);
-    RunCmd (engine, { "aibo", "fun", kFun[i] });
+    RunCmd (engine, { "abpb", "fun", kFun[i] });
     DrainPrints (engine);
     CHECK (!PrintedSince (engine, mark, "Incorrect usage"));
   }
@@ -968,36 +968,36 @@ TEST_CASE ("unit/control_botops") {
   cmder->v.solid = SOLID_BBOX;
   cmder->v.movetype = MOVETYPE_WALK;
 
-  RunCmdAs (engine, cmder, { "aibo", "menu", "cmd" });
+  RunCmdAs (engine, cmder, { "abpb", "menu", "cmd" });
   CHECK (clients[cmder].MenuId == MenuId::Commands);
 
   cmder->v.health = 0.0f;
-  RunCmdAs (engine, cmder, { "aibo", "menu", "cmd" });
+  RunCmdAs (engine, cmder, { "abpb", "menu", "cmd" });
   CHECK (clients[cmder].MenuId == MenuId::Main);
   cmder->v.health = 100.0f;
 
   // ...node menu needs an editor: refused first, opens once granted...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "graphmenu" });
+  RunCmd (engine, { "abpb", "graphmenu" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "without setting the editor"));
 
-  RunCmdAs (engine, cmder, { "aibo", "g", "acquire_editor" });
+  RunCmdAs (engine, cmder, { "abpb", "g", "acquire_editor" });
   CHECK (graph.HasEditor ());
-  RunCmdAs (engine, cmder, { "aibo", "graphmenu" });
+  RunCmdAs (engine, cmder, { "abpb", "graphmenu" });
   CHECK (clients[cmder].MenuId == MenuId::NodeMainPage1);
 
   // ...rapid client output queues through the client channel...
-  RunCmdAs (engine, cmder, { "aibo", "cvars", "quota" });
+  RunCmdAs (engine, cmder, { "abpb", "cvars", "quota" });
   DrainPrints (engine);
 
   // ...cvars legs: bare lists all, nomatch lists none, save_map persists...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "cvars" });
+  RunCmd (engine, { "abpb", "cvars" });
   DrainPrints (engine);
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "cvars", "zzz_nomatch" });
+  RunCmd (engine, { "abpb", "cvars", "zzz_nomatch" });
   DrainPrints (engine);
 
   {
@@ -1006,7 +1006,7 @@ TEST_CASE ("unit/control_botops") {
   }
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "cvars", "save_map" });
+  RunCmd (engine, { "abpb", "cvars", "save_map" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "written to file"));
 
@@ -1031,63 +1031,63 @@ TEST_CASE ("unit/control_botops") {
 
   const int kills_before = testhost::CsCalls (cs, "ClientKill");
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "slay", "host" });
+  RunCmd (engine, { "abpb", "debug", "slay", "host" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "listenserver"));
   CHECK (testhost::CsCalls (cs, "ClientKill") == kills_before);
 
-  RunCmd (engine, { "aibo", "debug", "slay", "1" });
+  RunCmd (engine, { "abpb", "debug", "slay", "1" });
   DrainPrints (engine);
   CHECK (testhost::CsCalls (cs, "ClientKill") == kills_before + 1);
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "slay", "99" });
+  RunCmd (engine, { "abpb", "debug", "slay", "99" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "not found"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "notarget" });
+  RunCmd (engine, { "abpb", "debug", "notarget" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "slap" });
+  RunCmd (engine, { "abpb", "debug", "slap" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "slap", "nosuchplayer" });
+  RunCmd (engine, { "abpb", "debug", "slap", "nosuchplayer" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "not found"));
 
   const float slap_before = slayee->v.velocity.z;
-  RunCmd (engine, { "aibo", "debug", "slap", "Slayee" });
+  RunCmd (engine, { "abpb", "debug", "slap", "Slayee" });
   DrainPrints (engine);
   CHECK (slayee->v.velocity.z == slap_before + 256.0f);
 
-  RunCmd (engine, { "aibo", "debug", "slap", "Slayee", "5000" });
+  RunCmd (engine, { "abpb", "debug", "slap", "Slayee", "5000" });
   DrainPrints (engine);
   CHECK (!game.IsAliveEntity (slayee));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "slap", "Slayee" });
+  RunCmd (engine, { "abpb", "debug", "slap", "Slayee" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "not alive"));
 
   // ...exec legs: raw clients go direct, misses stay handled, write is empty...
   const size_t cc_base = engine.ClientCommands ().size ();
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "exec", "Slayee", "say hi" });
+  RunCmd (engine, { "abpb", "debug", "exec", "Slayee", "say hi" });
   DrainPrints (engine);
   CHECK (engine.ClientCommands ().size () > cc_base);
   CHECK (PrintedSince (engine, mark, "Executed command"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "exec", "nosuchplayer", "say hi" });
+  RunCmd (engine, { "abpb", "debug", "exec", "nosuchplayer", "say hi" });
   DrainPrints (engine);
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "translate", "write" });
+  RunCmd (engine, { "abpb", "debug", "translate", "write" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "No missing translations"));
 
@@ -1098,7 +1098,7 @@ TEST_CASE ("unit/control_botops") {
 
   {
     ystl::Array<ystl::String> args {};
-    args.push ("aibo");
+    args.push ("abpb");
     args.push ("version");
     engine.SetCmdArgs (args);
     ctrl.HandleEngineCommands (); // denied at the door, silently ignored
@@ -1113,7 +1113,7 @@ TEST_CASE ("unit/control_botops") {
 
   {
     ystl::Array<ystl::String> args {};
-    args.push ("aibo");
+    args.push ("abpb");
     args.push ("version");
     engine.SetCmdArgs (args);
     CHECK (ctrl.HandleClientCommands (human));
@@ -1211,7 +1211,7 @@ TEST_CASE ("unit/control_botops") {
   ctrl.AssignAdminRights (human, nullptr);
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "debug", "god" });
+  RunCmd (engine, { "abpb", "debug", "god" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
   engine.SetDedicatedServer (true);
@@ -1252,149 +1252,149 @@ TEST_CASE ("unit/control_nodeops") {
   clients[rival].flags |= ClientFlags::Admin;
 
   // ...second editor loses the race while rights are held...
-  RunCmdAs (engine, editor, { "aibo", "g", "acquire_editor" });
+  RunCmdAs (engine, editor, { "abpb", "g", "acquire_editor" });
   CHECK (graph.HasEditor ());
   CHECK (graph.GetEditor () == editor);
-  RunCmdAs (engine, rival, { "aibo", "g", "acquire_editor" });
+  RunCmdAs (engine, rival, { "abpb", "g", "acquire_editor" });
   CHECK (graph.GetEditor () == editor);
 
   // ...save legs run first on the pristine graph, then the matrix...
-  RunCmd (engine, { "aibo", "g", "on" });
+  RunCmd (engine, { "abpb", "g", "on" });
   CHECK (graph.HasEditFlag (GraphEdit::On));
   CHECK (mp_roundtime.As<float> () == 0.0f);
 
   size_t mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "save" });
+  RunCmd (engine, { "abpb", "g", "save" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "written to disk"));
 
   MirrorControlFile (bstor.BuildPath (StorageFile::Graph), bstor.BuildPath (StorageFile::Graph, true));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "load" });
+  RunCmd (engine, { "abpb", "g", "load" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "successfully loaded"));
 
-  RunCmd (engine, { "aibo", "g", "save", "nocheck" });
-  RunCmd (engine, { "aibo", "g", "save", "old" });
-  RunCmd (engine, { "aibo", "g", "save", "oldformat" });
+  RunCmd (engine, { "abpb", "g", "save", "nocheck" });
+  RunCmd (engine, { "abpb", "g", "save", "old" });
+  RunCmd (engine, { "abpb", "g", "save", "oldformat" });
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "apply" });
+  RunCmd (engine, { "abpb", "g", "apply" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Graph applied"));
 
   // ...on/off matrix: one restore pair, then every flag branch...
-  RunCmd (engine, { "aibo", "g", "off" });
+  RunCmd (engine, { "abpb", "g", "off" });
   CHECK (!graph.HasEditFlag (GraphEdit::On));
   CHECK (mp_roundtime.As<float> () == roundtime_before);
   CHECK (mp_freezetime.As<float> () == freezetime_before);
   CHECK (mp_timelimit.As<float> () == timelimit_before);
 
-  RunCmd (engine, { "aibo", "g", "on", "display" });
+  RunCmd (engine, { "abpb", "g", "on", "display" });
   CHECK (graph.HasEditFlag (GraphEdit::On));
 
-  RunCmd (engine, { "aibo", "g", "on", "models" });
+  RunCmd (engine, { "abpb", "g", "on", "models" });
   CHECK (graph.HasEditFlag (GraphEdit::On));
 
-  RunCmd (engine, { "aibo", "g", "off" });
+  RunCmd (engine, { "abpb", "g", "off" });
   CHECK (!graph.HasEditFlag (GraphEdit::On));
 
-  RunCmd (engine, { "aibo", "g", "on", "noclip" }); // cold: enables both at once
+  RunCmd (engine, { "abpb", "g", "on", "noclip" }); // cold: enables both at once
   CHECK (graph.HasEditFlag (GraphEdit::On));
   CHECK (graph.HasEditFlag (GraphEdit::Noclip));
 
-  RunCmd (engine, { "aibo", "g", "off", "noclip" });
+  RunCmd (engine, { "abpb", "g", "off", "noclip" });
   CHECK (!graph.HasEditFlag (GraphEdit::Noclip));
   CHECK (graph.HasEditFlag (GraphEdit::On));
 
-  RunCmd (engine, { "aibo", "g", "on", "noclip" }); // warm: editor flag already on
+  RunCmd (engine, { "abpb", "g", "on", "noclip" }); // warm: editor flag already on
   CHECK (graph.HasEditFlag (GraphEdit::Noclip));
 
-  RunCmd (engine, { "aibo", "g", "off" });
+  RunCmd (engine, { "abpb", "g", "off" });
   CHECK (!graph.HasEditFlag (GraphEdit::On));
 
-  RunCmd (engine, { "aibo", "g", "on", "auto" }); // cold: enables both at once
+  RunCmd (engine, { "abpb", "g", "on", "auto" }); // cold: enables both at once
   CHECK (graph.HasEditFlag (GraphEdit::On));
   CHECK (graph.HasEditFlag (GraphEdit::Auto));
 
-  RunCmd (engine, { "aibo", "g", "off" });
+  RunCmd (engine, { "abpb", "g", "off" });
   CHECK (!graph.HasEditFlag (GraphEdit::On));
 
-  RunCmd (engine, { "aibo", "g", "on" });
-  RunCmd (engine, { "aibo", "g", "on", "auto" }); // warm: only the auto flag
+  RunCmd (engine, { "abpb", "g", "on" });
+  RunCmd (engine, { "abpb", "g", "on", "auto" }); // warm: only the auto flag
   CHECK (graph.HasEditFlag (GraphEdit::Auto));
 
-  RunCmd (engine, { "aibo", "g", "off", "auto" });
+  RunCmd (engine, { "abpb", "g", "off", "auto" });
   CHECK (!graph.HasEditFlag (GraphEdit::Auto));
 
-  RunCmd (engine, { "aibo", "g", "off", "models" });
+  RunCmd (engine, { "abpb", "g", "off", "models" });
 
-  RunCmd (engine, { "aibo", "g", "off" });
+  RunCmd (engine, { "abpb", "g", "off" });
   CHECK (!graph.HasEditFlag (GraphEdit::On));
 
-  RunCmd (engine, { "aibo", "g", "on" }); // back on for the editing legs
+  RunCmd (engine, { "abpb", "g", "on" }); // back on for the editing legs
 
   // ...add, flags and autopath entries open their menus for the editor...
-  RunCmdAs (engine, editor, { "aibo", "g", "add" });
+  RunCmdAs (engine, editor, { "abpb", "g", "add" });
   CHECK (clients[editor].MenuId == MenuId::NodeType);
 
-  RunCmdAs (engine, editor, { "aibo", "g", "flags" });
+  RunCmdAs (engine, editor, { "abpb", "g", "flags" });
   CHECK (clients[editor].MenuId == MenuId::NodeFlag);
 
-  RunCmdAs (engine, editor, { "aibo", "g", "path_set_autopath" });
+  RunCmdAs (engine, editor, { "abpb", "g", "path_set_autopath" });
   CHECK (clients[editor].MenuId == MenuId::NodeAutoPath);
 
-  RunCmd (engine, { "aibo", "g", "path_create" }); // console has no menu target
+  RunCmd (engine, { "abpb", "g", "path_create" }); // console has no menu target
 
   // ...park on node 0 and cache node 1 for the directed legs...
-  RunCmd (engine, { "aibo", "g", "on" });
+  RunCmd (engine, { "abpb", "g", "on" });
   editor->v.origin = graph[0].origin;
-  RunCmd (engine, { "aibo", "g", "cache", "1" });
+  RunCmd (engine, { "abpb", "g", "cache", "1" });
 
-  RunCmd (engine, { "aibo", "g", "path_create_out" });
-  RunCmd (engine, { "aibo", "g", "path_create_in" });
-  RunCmd (engine, { "aibo", "g", "path_create_both" });
-  RunCmd (engine, { "aibo", "g", "path_create_jump" });
-  RunCmd (engine, { "aibo", "g", "path_delete" });
-  RunCmd (engine, { "aibo", "g", "path_clean" });
-  RunCmd (engine, { "aibo", "g", "path_clean", "1" });
+  RunCmd (engine, { "abpb", "g", "path_create_out" });
+  RunCmd (engine, { "abpb", "g", "path_create_in" });
+  RunCmd (engine, { "abpb", "g", "path_create_both" });
+  RunCmd (engine, { "abpb", "g", "path_create_jump" });
+  RunCmd (engine, { "abpb", "g", "path_delete" });
+  RunCmd (engine, { "abpb", "g", "path_clean" });
+  RunCmd (engine, { "abpb", "g", "path_clean", "1" });
 
   // ...missing options fall back to the nearest node...
-  RunCmd (engine, { "aibo", "g", "cache" });
-  RunCmd (engine, { "aibo", "g", "setradius", "32" });
+  RunCmd (engine, { "abpb", "g", "cache" });
+  RunCmd (engine, { "abpb", "g", "setradius", "32" });
   CHECK (graph.paths_[0].radius == 32.0f);
-  RunCmd (engine, { "aibo", "g", "clean" });
+  RunCmd (engine, { "abpb", "g", "clean" });
 
   // ...bad indexes are reported, never applied...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "delete", "99" });
+  RunCmd (engine, { "abpb", "g", "delete", "99" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Could not delete"));
 
-  RunCmd (engine, { "aibo", "g", "cache", "99" });
-  RunCmd (engine, { "aibo", "g", "clean", "99" });
+  RunCmd (engine, { "abpb", "g", "cache", "99" });
+  RunCmd (engine, { "abpb", "g", "clean", "99" });
 
   // ...no nearest and no destination legs need a cleared cache far away...
   editor->v.origin = ystl::Vector (5000.0f, 0.0f, 0.0f);
-  RunCmd (engine, { "aibo", "g", "cache" }); // clears: nothing in 50 units
+  RunCmd (engine, { "abpb", "g", "cache" }); // clears: nothing in 50 units
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "path_create_out" });
+  RunCmd (engine, { "abpb", "g", "path_create_out" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Unable to find nearest"));
 
   editor->v.origin = graph[0].origin; // nearest back, cache still cleared
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "path_create_out" });
+  RunCmd (engine, { "abpb", "g", "path_create_out" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Unable to find destination"));
 
-  RunCmd (engine, { "aibo", "g", "path_delete" }); // same missing destination leg
+  RunCmd (engine, { "abpb", "g", "path_delete" }); // same missing destination leg
 
   // ...camp iteration walks begin, next, double-begin, drain and end...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "iterate_camp", "begin" });
+  RunCmd (engine, { "abpb", "g", "iterate_camp", "begin" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Unable to begin"));
 
@@ -1403,43 +1403,43 @@ TEST_CASE ("unit/control_nodeops") {
   graph.paths_[0].end = ystl::Vector (100.0f, 0.0f, 0.0f); // checks need a camp end
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "iterate_camp", "begin" });
+  RunCmd (engine, { "abpb", "g", "iterate_camp", "begin" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Ready for iteration"));
 
-  RunCmd (engine, { "aibo", "g", "iterate_camp", "begin" }); // already begun
-  RunCmdAs (engine, editor, { "aibo", "g", "iterate_camp", "next" }); // crouch adds 23 up
+  RunCmd (engine, { "abpb", "g", "iterate_camp", "begin" }); // already begun
+  RunCmdAs (engine, editor, { "abpb", "g", "iterate_camp", "next" }); // crouch adds 23 up
   CHECK (editor->v.origin.z == graph[0].origin.z + 23.0f);
 
   editor->v.origin = graph[0].origin;
-  RunCmd (engine, { "aibo", "g", "iterate_camp", "next" }); // drained after the single spot
-  RunCmd (engine, { "aibo", "g", "iterate_camp", "end" }); // empty needs a begin first
+  RunCmd (engine, { "abpb", "g", "iterate_camp", "next" }); // drained after the single spot
+  RunCmd (engine, { "abpb", "g", "iterate_camp", "end" }); // empty needs a begin first
 
-  RunCmd (engine, { "aibo", "g", "iterate_camp", "begin" });
-  RunCmd (engine, { "aibo", "g", "iterate_camp", "end" }); // clears silently
+  RunCmd (engine, { "abpb", "g", "iterate_camp", "begin" });
+  RunCmd (engine, { "abpb", "g", "iterate_camp", "end" }); // clears silently
 
   // ...height, delete and training legs run before the final wipe...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "adjust_height" });
+  RunCmd (engine, { "abpb", "g", "adjust_height" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
-  RunCmd (engine, { "aibo", "g", "adjust_height", "-5" });
+  RunCmd (engine, { "abpb", "g", "adjust_height", "-5" });
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "delete", "7" });
+  RunCmd (engine, { "abpb", "g", "delete", "7" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "has been deleted"));
   CHECK (graph.Length () == 7);
 
-  RunCmd (engine, { "aibo", "g", "erase_training" });
+  RunCmd (engine, { "abpb", "g", "erase_training" });
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "erase" });
+  RunCmd (engine, { "abpb", "g", "erase" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "iamsure"));
 
-  RunCmd (engine, { "aibo", "g", "erase", "iamsure" });
+  RunCmd (engine, { "abpb", "g", "erase", "iamsure" });
 
   {
     ystl::MemFile probe (bstor.BuildPath (StorageFile::Graph));
@@ -1448,37 +1448,37 @@ TEST_CASE ("unit/control_nodeops") {
 
   // ...help legs: known subcommand prints, unknown lists everything...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "help", "save" });
+  RunCmd (engine, { "abpb", "g", "help", "save" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Command:"));
 
-  RunCmd (engine, { "aibo", "g", "help", "nosuchsub" });
+  RunCmd (engine, { "abpb", "g", "help", "nosuchsub" });
 
   // ...offline refresh degrades to the append hint...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "refresh" });
+  RunCmd (engine, { "abpb", "g", "refresh" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "append"));
 
   // ...bad iterate legs stay format errors (editor still held)...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "iterate_camp", "frobnicate" });
+  RunCmd (engine, { "abpb", "g", "iterate_camp", "frobnicate" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "iterate_camp" });
+  RunCmd (engine, { "abpb", "g", "iterate_camp" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Incorrect usage"));
 
   // ...release frees, the second one finds nobody...
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "release_editor" });
+  RunCmd (engine, { "abpb", "g", "release_editor" });
   DrainPrints (engine);
   CHECK (!graph.HasEditor ());
   CHECK (PrintedSince (engine, mark, "freed"));
 
-  RunCmd (engine, { "aibo", "g", "release_editor" });
+  RunCmd (engine, { "abpb", "g", "release_editor" });
 
   mp_roundtime.Set (roundtime_before);
   mp_freezetime.Set (freezetime_before);
@@ -1512,7 +1512,7 @@ TEST_CASE ("unit/control_menuflow") {
   };
 
   auto open = [&] (edict_t *who) {
-    RunCmdAs (engine, who, { "aibo", "menu" });
+    RunCmdAs (engine, who, { "abpb", "menu" });
   };
 
   edict_t *one = game.CreateFakeClient ("MenuOne");
@@ -1533,7 +1533,7 @@ TEST_CASE ("unit/control_menuflow") {
     target->v.movetype = MOVETYPE_WALK;
   }
 
-  RunCmd (engine, { "aibo", "addbot" });
+  RunCmd (engine, { "abpb", "addbot" });
   HOST_REQUIRE (testhost::PumpBots (engine, 1));
 
   // ...main matrix: control, features, fill, kill, exit and default...
@@ -1743,7 +1743,7 @@ TEST_CASE ("unit/control_menuflow") {
   clients[one].team2 = Team::CT;
   one->v.origin = ystl::Vector (100.0f, 0.0f, 0.0f);
 
-  RunCmdAs (engine, one, { "aibo", "menu", "cmd" });
+  RunCmdAs (engine, one, { "abpb", "menu", "cmd" });
   CHECK (clients[one].MenuId == MenuId::Commands);
 
   cmd_bot->has_c4_ = true;
@@ -1912,15 +1912,15 @@ TEST_CASE ("unit/control_pageflow") {
   clients.Update ();
   clients[editor].flags |= ClientFlags::Admin;
 
-  RunCmdAs (engine, editor, { "aibo", "g", "acquire_editor" });
+  RunCmdAs (engine, editor, { "abpb", "g", "acquire_editor" });
   HOST_REQUIRE (graph.HasEditor ());
 
-  RunCmd (engine, { "aibo", "g", "on" });
+  RunCmd (engine, { "abpb", "g", "on" });
   editor->v.origin = graph[0].origin;
-  RunCmd (engine, { "aibo", "g", "cache", "1" });
+  RunCmd (engine, { "abpb", "g", "cache", "1" });
 
   // ...page one toggles, caches, opens every submenu and pages over...
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (clients[editor].MenuId == MenuId::NodeMainPage1);
 
   CHECK (pick (editor, "1"));
@@ -1934,24 +1934,24 @@ TEST_CASE ("unit/control_pageflow") {
   CHECK (pick (editor, "3"));
   CHECK (clients[editor].MenuId == MenuId::NodePath);
 
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "5"));
   CHECK (clients[editor].MenuId == MenuId::NodeType);
 
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "7"));
   CHECK (clients[editor].MenuId == MenuId::NodeAutoPath);
 
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "8"));
   CHECK (clients[editor].MenuId == MenuId::NodeRadius);
 
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "9"));
   CHECK (clients[editor].MenuId == MenuId::NodeMainPage2);
 
   // ...page two stores, loads, checks and flips auto and noclip...
-  RunCmd (engine, { "aibo", "g", "save" });
+  RunCmd (engine, { "abpb", "g", "save" });
 
   {
     MirrorControlFile (bstor.BuildPath (StorageFile::Graph), bstor.BuildPath (StorageFile::Graph, true));
@@ -1987,7 +1987,7 @@ TEST_CASE ("unit/control_pageflow") {
   CHECK (pick (editor, "10"));
 
   // ...flag tour toggles every flag, camp opens directions...
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "9"));
   CHECK (pick (editor, "3"));
   CHECK (clients[editor].MenuId == MenuId::NodeFlag);
@@ -2019,14 +2019,14 @@ TEST_CASE ("unit/control_pageflow") {
   CHECK (pick (editor, "10"));
   CHECK (clients[editor].MenuId == MenuId::None);
 
-  RunCmdAs (engine, editor, { "aibo", "g", "flags" });
+  RunCmdAs (engine, editor, { "abpb", "g", "flags" });
   CHECK (pick (editor, "9")); // camp off, back to flags
   CHECK (clients[editor].MenuId == MenuId::NodeFlag);
   CHECK (pick (editor, "8")); // crouch back up
   CHECK (graph[graph.GetEditorNearest ()].origin.z == z_before);
 
   // ...radius tour pins one value, exit closes...
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "8"));
   CHECK (pick (editor, "5"));
   CHECK (graph[graph.GetEditorNearest ()].radius == 48.0f);
@@ -2035,7 +2035,7 @@ TEST_CASE ("unit/control_pageflow") {
 
   // ...type tour adds normal and goal, learns jump, exits...
   editor->v.origin = ystl::Vector (5000.0f, 0.0f, 0.0f); // adds refuse spots near nodes
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "5"));
   CHECK (pick (editor, "1"));
   CHECK (clients[editor].MenuId == MenuId::NodeType);
@@ -2049,7 +2049,7 @@ TEST_CASE ("unit/control_pageflow") {
   editor->v.origin = graph[0].origin;
 
   // ...autopath tour sets, defaults and exits...
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "7"));
   CHECK (pick (editor, "2"));
   CHECK (clients[editor].MenuId == MenuId::NodeAutoPath);
@@ -2057,11 +2057,11 @@ TEST_CASE ("unit/control_pageflow") {
   CHECK (pick (editor, "10"));
 
   // ...path tour creates every direction and exits...
-  RunCmd (engine, { "aibo", "g", "on" });
+  RunCmd (engine, { "abpb", "g", "on" });
   editor->v.origin = graph[0].origin;
-  RunCmd (engine, { "aibo", "g", "cache", "1" });
+  RunCmd (engine, { "abpb", "g", "cache", "1" });
 
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "3"));
 
   for (const char *item : { "1", "2", "3", "4" }) {
@@ -2071,7 +2071,7 @@ TEST_CASE ("unit/control_pageflow") {
   CHECK (pick (editor, "10"));
 
   // ...page one destructive legs erase a path and the nearest node...
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "4"));
   CHECK (clients[editor].MenuId == MenuId::NodeMainPage1);
   CHECK (pick (editor, "6"));
@@ -2083,33 +2083,33 @@ TEST_CASE ("unit/control_pageflow") {
   graph.Reset ();
 
   size_t mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "apply" });
+  RunCmd (engine, { "abpb", "g", "apply" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "no graph to apply"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "addbot" });
+  RunCmd (engine, { "abpb", "addbot" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "There is no graph"));
 
   mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "save" });
+  RunCmd (engine, { "abpb", "g", "save" });
   DrainPrints (engine);
   CHECK (PrintedSince (engine, mark, "Could not save nodes"));
 
-  RunCmd (engine, { "aibo", "g", "check" });
-  RunCmd (engine, { "aibo", "g", "path_clean" });
-  RunCmd (engine, { "aibo", "g", "path_clean", "0" });
-  RunCmd (engine, { "aibo", "g", "cache" });
-  RunCmd (engine, { "aibo", "g", "cache", "0" });
-  RunCmd (engine, { "aibo", "g", "delete", "0" });
-  RunCmd (engine, { "aibo", "g", "delete" });
-  RunCmd (engine, { "aibo", "g", "clean", "0" });
-  RunCmd (engine, { "aibo", "g", "clean", "all" });
-  RunCmd (engine, { "aibo", "g", "setradius", "10" });
-  RunCmd (engine, { "aibo", "g", "teleport", "0" });
+  RunCmd (engine, { "abpb", "g", "check" });
+  RunCmd (engine, { "abpb", "g", "path_clean" });
+  RunCmd (engine, { "abpb", "g", "path_clean", "0" });
+  RunCmd (engine, { "abpb", "g", "cache" });
+  RunCmd (engine, { "abpb", "g", "cache", "0" });
+  RunCmd (engine, { "abpb", "g", "delete", "0" });
+  RunCmd (engine, { "abpb", "g", "delete" });
+  RunCmd (engine, { "abpb", "g", "clean", "0" });
+  RunCmd (engine, { "abpb", "g", "clean", "all" });
+  RunCmd (engine, { "abpb", "g", "setradius", "10" });
+  RunCmd (engine, { "abpb", "g", "teleport", "0" });
 
-  RunCmdAs (engine, editor, { "aibo", "g", "menu" });
+  RunCmdAs (engine, editor, { "abpb", "g", "menu" });
   CHECK (pick (editor, "9"));
   CHECK (pick (editor, "4")); // save with check fails on the empty graph
   CHECK (clients[editor].MenuId == MenuId::NodeMainPage2);
@@ -2128,12 +2128,12 @@ TEST_CASE ("unit/control_pageflow") {
   ctrl.CloseMenu (); // already none, early return
 
   size_t free_mark = PrintMark (engine);
-  RunCmd (engine, { "aibo", "g", "release_editor" });
+  RunCmd (engine, { "abpb", "g", "release_editor" });
   DrainPrints (engine);
   CHECK (!graph.HasEditor ());
   CHECK (PrintedSince (engine, free_mark, "freed"));
 
-  RunCmd (engine, { "aibo", "g", "release_editor" });
+  RunCmd (engine, { "abpb", "g", "release_editor" });
 
   cv_debug_goal.Set (goal_before);
   ctrl.SetIssuer (nullptr);

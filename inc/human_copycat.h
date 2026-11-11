@@ -1,4 +1,4 @@
-// AiBo Human Copycat 4.2.6. GPL-2.0-or-later; see COPYING.GPL-2.0.
+// ABPB Human Copycat 4.2.6. GPL-2.0-or-later; see COPYING.GPL-2.0.
 #pragma once
 
 namespace rbcc { struct Clip; }

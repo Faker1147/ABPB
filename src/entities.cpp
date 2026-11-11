@@ -1,11 +1,11 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 // on other than win32/linux platforms i.e. arm we're using xash3d engine to run which exposes
 // nice interface to handle with linkents. if ever rehlds or hlds engine will ever run on ARM or

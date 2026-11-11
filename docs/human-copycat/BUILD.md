@@ -1,66 +1,79 @@
-# Build AiBo 4.3.3
+# Building ABPB 4.3.3
 
-Source sudah mencakup dependensi vendored. Kebutuhan: CMake 3.22+, compiler C++20,
-Python 3, dan Ninja/Make. Build DLL tidak membutuhkan runtime AMXX/Metamod.
-Jalankan dari root source/repository.
+The source snapshot vendors its dependencies. Requirements: **CMake 3.22+**, a **C++20 compiler**, **Python 3**, and **Ninja** or Make. Building the DLL does not need a running Metamod or AMXX installation.
 
-## Uji native
+All build options use the `ABPB_` prefix.
+
+## Native fake-engine tests
 
 ```sh
-cmake -S . -B build/test -G Ninja -DCMAKE_BUILD_TYPE=Debug -DAIBO_NATIVE=ON -DAIBO_64BIT=ON -DAIBO_BUILD_TESTS=ON -DAIBO_WITH_TLS=OFF -DAIBO_WITH_AMXX=OFF -DAIBO_LTO=OFF
+cmake -S . -B build/test -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug -DABPB_NATIVE=ON -DABPB_64BIT=ON \
+  -DABPB_BUILD_TESTS=ON -DABPB_WITH_TLS=OFF \
+  -DABPB_WITH_AMXX=OFF -DABPB_LTO=OFF
 cmake --build build/test --parallel 4
 ctest --test-dir build/test --output-on-failure --timeout 90 --parallel 2
 ```
 
-Fixture numerik sintetis 1200 input menguji pitch/yaw/fire pada level nol.
-Tidak ada source versi lama dalam repository. Sudut memakai toleransi 0.001 derajat
-untuk perbedaan floating point compiler; keputusan menembak harus sama persis.
-Tes host bukan pertandingan game sebenarnya.
+The synthetic fixture feeds 1200 records through the aim pipeline and checks pitch, yaw and fire decisions. Angles allow a 0.001-degree floating-point tolerance; fire decisions must match exactly. Host tests are not a real game match.
 
-## Windows x86 DLL dengan MinGW
+## Windows x86 DLL with MinGW
 
 ```sh
-cmake -S . -B build/windows -G Ninja -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/windows-x86-mingw.cmake -DCMAKE_BUILD_TYPE=Release -DAIBO_WITH_TLS=ON -DAIBO_WITH_AMXX=OFF -DAIBO_LTO=OFF
+cmake -S . -B build/windows -G Ninja \
+  -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/windows-x86-mingw.cmake \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DABPB_WITH_TLS=ON -DABPB_WITH_AMXX=OFF -DABPB_LTO=OFF
 cmake --build build/windows --parallel 4
-python3 tools/check_dll.py --arch i386 build/windows/AiBo.dll
+python tools/check_dll.py --arch i386 build/windows/ABPB.dll
 ```
 
-Butuh i686 MinGW-w64 POSIX GCC/G++, binutils dan windres di PATH. Toolchain yang
-diekstrak manual mungkin membutuhkan CMAKE_RC_FLAGS dengan
-`--preprocessor=/path/i686-w64-mingw32-gcc-posix --preprocessor-arg=-E --preprocessor-arg=-xc --preprocessor-arg=-DRC_INVOKED`.
-Versi resource DLL 4.3.3.1; label produk AiBo 4.3.3.
+This needs `i686-w64-mingw32-g++-posix`, binutils and windres on `PATH`. A manually extracted toolchain may need `CMAKE_RC_FLAGS` with:
 
-MSVC (Windows x86; hasil CI tersedia pada tab Actions):
+```text
+--preprocessor=/path/i686-w64-mingw32-gcc-posix
+--preprocessor-arg=-E --preprocessor-arg=-xc --preprocessor-arg=-DRC_INVOKED
+```
+
+## Windows x86 DLL with Zig
+
+The release package was built with Zig 0.17.1 (`x86-windows-gnu`, Clang) plus CMake and Ninja, using `cmake/toolchains/windows-x86-clang.cmake` with `-DABPB_64BIT=OFF`. Zig builds link against libc++ and libc++abi so the Human Copycat `std::__1::` symbols resolve; see `cmake/ABPBFlags.cmake`.
+
+When configuring with that toolchain on Windows, point `CMAKE_AR` and `CMAKE_RANLIB` at small wrappers that call `zig ar` and `zig ranlib`, and make sure `windres` is on `PATH`. The MSVC and MinGW recipes above are the simplest supported build paths.
+
+## Windows x86 DLL with MSVC
 
 ```powershell
-cmake -S . -B build/windows -A Win32 -DAIBO_WITH_TLS=ON -DAIBO_WITH_AMXX=OFF -DAIBO_LTO=OFF
+cmake -S . -B build/windows -A Win32 `
+  -DABPB_WITH_TLS=ON -DABPB_WITH_AMXX=OFF -DABPB_LTO=OFF
 cmake --build build/windows --config Release --parallel 4
-python tools/check_dll.py --arch i386 build/windows/Release/AiBo.dll
+python tools/check_dll.py --arch i386 build/windows/Release/ABPB.dll
 ```
 
-Workflow .github/workflows/build.yml menjalankan regresi Linux serta build/ABI DLL
-Windows. Status dan log pengujian aktual tersedia pada tab Actions repository. Tidak ada riwayat git dari proyek asal dalam ZIP.
+The GitHub Actions workflow runs the Linux regression tests and a Windows DLL build/ABI check. See the Actions tab for the current status.
 
-## Installer EXE
-
-Dari paket lengkap, folder `../install/cstrike` menyediakan komponen runtime asli
-yang ditambahkan pengguna. Source GitHub hanya menyertakan kode/config, bukan DLL
-Metamod/AMXX hasil kompilasi. Siapkan runtime terpisah untuk membangun installer.
-Worker C++20 dapat dibangun pada Linux sebagai berikut:
+## AMXX module
 
 ```sh
-g++ -std=c++20 -O2 -Wall -Wextra -Wpedantic -Werror -DAIBO_INSTALL_TESTS installer/install_core.cpp installer/install_main.cpp -o build/AiBoInstall-test
-i686-w64-mingw32-g++-posix -std=c++20 -O2 -Wall -Wextra -Wpedantic -Werror -static -static-libstdc++ -static-libgcc -mwindows -municode installer/install_core.cpp installer/install_main.cpp -lshell32 -o build/AiBoInstall.exe
-python3 tools/build_installer.py --binary build/windows/AiBo.dll --worker build/AiBoInstall.exe --payload-base ../install/cstrike --output ../AiBo-4.3.3-Setup.exe
-python3 tests/installer_test.py build/AiBoInstall-test build/installer/payload
-python3 tools/package_aibo.py --binary build/windows/AiBo.dll --installer ../AiBo-4.3.3-Setup.exe --output ../AiBo-4.3.3-Windows.zip
+cmake -S . -B build/windows-x86 -G Ninja \
+  -DCMAKE_TOOLCHAIN_FILE=toolchains/zig-x86-windows-gnu.cmake \
+  -DCMAKE_BUILD_TYPE=Release -DABPB_WITH_AMXX=ON
+cmake --build build/windows-x86 --target abpb_amxx --parallel 4
 ```
 
-NSIS 3 harus tersedia (`--makensis` dapat menentukan executable). Builder memeriksa
-plugins.ini, DLL PE32, default Pro serta hash kedua file unggahan sebelum makensis.
-Source payload pengguna tidak diambil dari internet. Untuk source tanpa paket
-lengkap, ubah `--payload-base` ke folder runtime cstrike yang disiapkan.
+The module is 32-bit only and is not needed unless an AMXX plugin calls the `abpb_*` natives.
 
-File LICENSE/COPYING.GPL-2.0 berlaku untuk fork gabungan; atribusi komponen dan graph
-ada di NOTICE-AiBo.md dan cfg/addons/AiBo/licenses/. Hasil build, log dan ZIP dikecualikan
-oleh .gitignore. Untuk GitHub, unggah isi folder source/ sebagai root repository.
+## Portable package
+
+```sh
+python tools/package_abpb.py \
+  --binary build/windows-x86/ABPB.dll \
+  --amxx build/windows-x86/abpb_amxx.dll \
+  --output dist/ABPB-4.3.3-Windows-x86.zip
+```
+
+The packaging script copies the DLL, `conf/`, the Dust2 graph, licenses and the optional AMXX module/include/sample, then writes `SHA256SUMS.txt`.
+
+## License and attribution
+
+The combined fork is GPL-2.0-or-later. Component attribution and graph notices are in `NOTICE-ABPB.md` and `cfg/addons/ABPB/licenses/`. Build output, logs and ZIP files are ignored by `.gitignore`.

@@ -1,11 +1,11 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 namespace bot {
 
@@ -126,9 +126,9 @@ void Support::CheckWelcome () {
     // Bounded dynamic strings: retain the uploaded welcome edit and give every
     // remaining call a defined, consistently branded value.
     ystl::String modern_welcome_message {};
-    modern_welcome_message.assignf ("AiBo v%s - Artificial Intelligence Bot\n%s", product.version, author_str);
+    modern_welcome_message.assignf ("ABPB v%s - Artificial Intelligence Bot\n%s", product.version, author_str);
     ystl::String modern_chat_welcome_message {};
-    modern_chat_welcome_message.assignf ("AiBo v%s - Artificial Intelligence Bot", product.version);
+    modern_chat_welcome_message.assignf ("ABPB v%s - Artificial Intelligence Bot", product.version);
 
     // send a chat-position message
     MessageWriter (MSG_ONE, msgs.Id (NetMsg::TextMsg), nullptr, receive_ent)

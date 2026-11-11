@@ -1,4 +1,4 @@
-// AiBo 4.3.3: researched signature roles and historical annual HLTV peaks.
+// ABPB 4.3.3: researched signature roles and historical annual HLTV peaks.
 // GPL-2.0-or-later. Sources and interpretation: PRO-PROFILES-4.3.3-ID.md.
 #pragma once
 #include <array>

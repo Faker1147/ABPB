@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/config_{lookups,files}.
+// ABPB test host: unit/config_{lookups,files}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -10,7 +10,7 @@
 // chances, never asserted on.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -66,9 +66,9 @@ struct ConfigHook {
 namespace {
 
 void BootConfig (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -421,14 +421,14 @@ TEST_CASE ("unit/config_files") {
 
 TEST_CASE ("unit/config_listen") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // listen server: the first load binds the bot menu key
   engine.SetDedicatedServer (false);
   engine.SetCvar ("bind_menu_key", "g");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -459,10 +459,10 @@ TEST_CASE ("unit/config_mainstay") {
   testhost::FakeCSApi cs {};
 
   // listen boot: the dedicated flag is cached on first query, unlock before anything asks...
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   engine.SetDedicatedServer (false);
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -470,7 +470,7 @@ TEST_CASE ("unit/config_mainstay") {
 
   // fixtures next: the server activation runs the first main load, which samples the disable flag...
   WriteConfFile (ConfFile ("custom"), "DisableLogFile = yes\n");
-  WriteConfFile (ConfFile ("AiBo"), "; main config fixture\n\naibo_debug 1\naibo_quota 5\naibo_autovacate 0\naibo_no_such_cvar hello\n");
+  WriteConfFile (ConfFile ("ABPB"), "; main config fixture\n\nabpb_debug 1\nabpb_quota 5\nabpb_autovacate 0\nabpb_no_such_cvar hello\n");
 
   gamefuncs_t table {};
   HOST_REQUIRE (GetEntityAPI (&table, 140) != 0);
@@ -485,7 +485,7 @@ TEST_CASE ("unit/config_mainstay") {
 
   // pin the ignore list and quota: re-apply deterministically on top of whatever the boot left...
   const ystl::String ignore_before = cv_ignore_cvars_on_changelevel.As<ystl::StringRef> ();
-  cv_ignore_cvars_on_changelevel.Set ("aibo_quota,aibo_autovacate");
+  cv_ignore_cvars_on_changelevel.Set ("abpb_quota,abpb_autovacate");
   cv_quota.Set (9);
 
   // the boot load already applied the fixture: stored values stick, ignored ones keep theirs...
@@ -507,26 +507,26 @@ TEST_CASE ("unit/config_mainstay") {
 
   // ...zero quota preserves the incoming value instead of the live one...
   cv_quota.Set (0);
-  WriteConfFile (ConfFile ("AiBo"), "; quota fixture\naibo_quota 5\n");
+  WriteConfFile (ConfFile ("ABPB"), "; quota fixture\nabpb_quota 5\n");
   conf.LoadMainConfig (false);
   CHECK (cv_quota.As<int> () == 5);
   cv_quota.Set (9);
 
   // ...the first load executes every line verbatim...
-  WriteConfFile (ConfFile ("AiBo"), "; first load fixture\naibo_debug 0\n");
+  WriteConfFile (ConfFile ("ABPB"), "; first load fixture\nabpb_debug 0\n");
   conf.LoadMainConfig (true);
 
   bool saw_debug = false;
 
   for (const auto &cmd : engine.ServerCommands ()) {
-    if (cmd.find ("aibo_debug 0") != ystl::String::InvalidIndex) {
+    if (cmd.find ("abpb_debug 0") != ystl::String::InvalidIndex) {
       saw_debug = true;
     }
   }
   CHECK (saw_debug);
 
   // ...a missing file falls back to saving cvars...
-  ystl::plat.remove_file (ConfFile ("AiBo").chars ());
+  ystl::plat.remove_file (ConfFile ("ABPB").chars ());
   conf.LoadMainConfig (false);
 
   ystl::plat.remove_file (ConfFile ("custom").chars ());
@@ -949,9 +949,9 @@ TEST_CASE ("unit/config_gamedef") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -1104,7 +1104,7 @@ TEST_CASE ("unit/config_versions") {
   cv_language.Set (language_before.chars ());
 
   // ...map configs execute when the file exists...
-  WriteConfFile (MapSpecificFile (), "aibo_quota 9\n");
+  WriteConfFile (MapSpecificFile (), "abpb_quota 9\n");
   conf.LoadMapSpecificConfig ();
 
   bool saw_exec = false;

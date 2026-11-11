@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/rehlds_{dedicated,listen}.
+// ABPB test host: unit/rehlds_{dedicated,listen}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -7,7 +7,7 @@
 // ReHLDS engine present (harness never provides CreateInterface).
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -18,10 +18,10 @@ namespace bot {
 namespace {
 
 void BootRehlds (testhost::FakeEngine &engine, testhost::FakeCSApi &cs, bool dedicated) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
   engine.SetDedicatedServer (dedicated);
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

@@ -1,127 +1,177 @@
-# AiBo — Artificial Intelligence Bot
+# ABPB — Artificial Intelligence Bot for Counter-Strike 1.6
 
-**Human-inspired Counter-Strike 1.6 bots, built on YaPB and extended with local learning.**
+**An independent, identity-renamed build of [AiBo 4.3.3](https://github.com/keinzwei/AiBo) (YaPB fork), using its own `abpb` namespace so it can run next to YaPB, SYPB and other bot systems.**
 
-**AiBo creator and project maintainer: K9_einzwei** (GitHub: [keinzwei](https://github.com/keinzwei)).
+ABPB keeps AiBo's Human Copycat, Human Aim, local learning, navigation, exploration and procedural dialogue, while every command, cvar, folder, DLL, Metamod name and AMXX native uses the separate `ABPB` / `abpb` identity.
 
-[![Version](https://img.shields.io/badge/version-4.3.3-blue)](https://github.com/keinzwei/AiBo/releases/tag/v4.3.3)
-[![Platform](https://img.shields.io/badge/release-Windows%20x86-0078D4)](https://github.com/keinzwei/AiBo/releases)
-[![License](https://img.shields.io/badge/license-GPL--2.0--or--later-green)](LICENSE)
+- Base: AiBo `v4.3.3`, upstream commit `760180e`
+- Plugin: `addons/ABPB/bin/ABPB.dll` (32-bit Metamod plugin)
+- Config: `addons/ABPB/conf/ABPB.cfg` (181 `abpb_*` cvars)
+- Commands: `abpb` (short alias `abp`)
+- AMXX module library: `abpb`
+- License: GPL-2.0-or-later
 
-[Download installer](https://github.com/keinzwei/AiBo/releases/tag/v4.3.3) · [Bahasa Indonesia](README.id.md) · [Build guide](docs/human-copycat/BUILD.md) · [Credits](CREDITS.md)
+[中文说明](README-ABPB-CN.md) · [Quick install (中文)](INSTALL-ABPB-CN.txt) · [Build guide](docs/human-copycat/BUILD.md) · [Credits](CREDITS.md) · [Provenance notice](NOTICE-ABPB.md)
 
-AiBo combines YaPB's navigation and tactical foundation with the Human Copycat extension: controlled aim, observed human movement, lightweight online learning, geometry exploration and persistent match experience. It runs locally inside the game, without a cloud AI service, GPU, downloaded language model or API subscription.
+## Download
 
-This repository publishes **AiBo 4.3.3**, an independent community fork, not an official YaPB release.
+Download **`ABPB-4.3.3-Windows-x86.zip`** from [Releases](https://github.com/Faker1147/ABPB/releases). The archive contains the DLL, configuration, language files, a Dust2 navigation graph, optional AMXX module/include/sample and Chinese documentation.
+
+SHA-256 of the current package:
+
+```text
+A0D74829F9B473B5A1F342A3C76786779EDDB1F5D826A19A6488EE746D239D14
+```
+
+## Install
+
+1. Close Counter-Strike 1.6 / HLDS.
+2. Merge the archive's `addons` folder into your `cstrike` folder:
+   ```text
+   cstrike/addons/ABPB/bin/ABPB.dll
+   cstrike/addons/ABPB/conf/ABPB.cfg
+   ```
+3. Make sure Metamod is installed, then add this line to
+   `cstrike/addons/metamod/plugins.ini`:
+   ```text
+   win32 addons/ABPB/bin/ABPB.dll
+   ```
+4. Start the server and check the console:
+   ```text
+   meta list
+   abpb version
+   abpb add
+   ```
+
+ABPB is a **Metamod plugin**, not a GameDLL. Do not put it in `liblist.gam` and do not rename it to `mp.dll`. Only 32-bit (x86) GoldSrc is supported.
+
+To use the Simplified Chinese interface, set this in `cstrike/addons/ABPB/conf/ABPB.cfg`:
+
+```text
+abpb_language "chs"
+```
+
+Then run `exec addons/ABPB/conf/ABPB.cfg` or restart the server.
+
+## Coexistence with YaPB / SYPB
+
+| Item | ABPB | YaPB | SYPB |
+| --- | --- | --- | --- |
+| Folder | `addons/ABPB` | `addons/yapb` | `addons/sypb` |
+| Command | `abpb` / `abp` | `yb` / `yapb` | `sypb` |
+| Cvar prefix | `abpb_` | `yb_` | `sypb_` |
+| Bot quota | `abpb_quota` | `yb_quota` | `sypb_quota` |
+
+All three plugins can be loaded at the same time. Bot quotas are counted separately, so their sum must fit the server slots. On a 32-slot server, `abpb_quota 31` already fills all but one slot; disable automatic filling in YaPB/SYPB in that case. `abpb removebots` only removes ABPB bots.
+
+## Commands
+
+Run these in the server console:
+
+| Command | Purpose |
+| --- | --- |
+| `abpb version` | Show the ABPB version |
+| `abpb add [difficulty] [personality] [team] [model] [name]` | Add one bot |
+| `abpb fill [team] [count] [difficulty] [personality]` | Fill bots automatically |
+| `abpb removebots [instant] [team]` | Remove ABPB bots |
+| `abpb list` | List ABPB bots |
+| `abpb menu` | Open the main bot menu |
+| `abpb weapons [mode]` | Set the weapon mode |
+| `abpb cvars` | List all cvars |
+| `abpb graphmenu` | Open the navigation graph editor |
+| `abpb_human_status` | Human Copycat status |
+| `abpb_human_aim_status` | Human Aim status |
+| `abpb_learning_status` | Local learning status |
+| `abpb_explore_status` | Geometry exploration status |
+| `abpb_chat_status` | Procedural dialogue status |
+| `abpb_final_status` | Combined 4.3.3 status |
+| `abpb_human_save` / `abpb_human_reload` | Save / reload Human Copycat data |
+
+## Settings
+
+Edit `cstrike/addons/ABPB/conf/ABPB.cfg`; every option has a comment above it.
+
+| Setting | Default | Purpose |
+| --- | ---: | --- |
+| `abpb_quota` | `31` | Target bot count |
+| `abpb_quota_mode` | `normal` | `normal`, `fill` or `match` |
+| `abpb_language` | `en` | Interface language; use `chs` or `cht` for Chinese |
+| `abpb_human_copycat` | `1` | Enable Human Copycat |
+| `abpb_human_aim_level` | `100` | Global Pro aim ceiling; `-1` selects adaptive mode |
+| `abpb_human_aim_skill` | `100` | Base aim skill |
+| `abpb_human_reaction_skill` | `100` | Base reaction skill |
+| `abpb_human_pro_profiles` | `1` | 42 player-inspired profiles |
+| `abpb_human_hltv_skill` | `1` | HLTV-ranking ability weighting |
+| `abpb_human_ct_patrol` | `1` | Dust2 CT search patrols |
+| `abpb_learning` | `1` | Local learning system |
+| `abpb_chat` | `1` | Bot chat |
+| `abpb_human_chat_language` | `profile` | `profile`, or force `en` / `zh` / `ru` … |
+
+Player names and rankings are simulation references, without endorsement or measured equivalence to real players. The ranking-to-ability conversion is AiBo's own design.
 
 ## Features
 
 | Area | Implementation |
 | --- | --- |
-| Hybrid navigation | Native `.GRAPH` navigation, observed human routes and geometry exploration with floor, clearance, connection and progress checks. This version still uses graphs. |
-| Dust2 CT patrols | Situation-dependent searches through Tunnel, T-Spawn and Pit, with rotating patrol participation. Some CTs remain on objectives; enemy contact and urgent bomb tasks take priority. |
-| Human Aim | Reaction delay, bounded turning, aim variation, recoil handling, tapping, bursts, spray control, counter-strafe, preaim and scoped AWP behavior. Hits remain subject to the game engine. |
-| 42 player-inspired profiles | AWP/rifle preferences and simulated ability weights based on documented historical HLTV rankings. NEO/f0rest favor rifles; GuardiaN/kennyS favor affordable AWP purchases. |
-| Local learning | Tabular reinforcement learning, human demonstration priors, bot-versus-bot updates, persistent experience, observed opponent adaptation and shared team formation learning. |
-| Tactical variety | Opening formations, strategy variation, smoke around objectives, physical boosting where player collision permits, and location/strategy memory. |
-| Personalities and dialogue | Simulated competitive moods and local procedural conversations in 16 profile languages, using authored grammar. |
-| Persistent data | Validated files for demonstrations, routes, learning, exploration, strategy memory and aim calibration. No personal gameplay dataset is bundled. |
-| Windows installer | Game-folder checks, plugin configuration merging, numbered `.bak` backups, rollback handling and preservation of custom graphs. |
-| Complete source | C++ code, vendored dependencies, configurations, installer code, tests and build instructions. |
+| Navigation | Native `.GRAPH` navigation, observed human routes and geometry exploration with floor, clearance, connection and progress checks |
+| Human Aim | Reaction delay, bounded turning, aim variation, recoil handling, tapping, bursts, spray control, counter-strafe, preaim and scoped AWP behavior |
+| Human Copycat | Observes eligible human movement and aim, stores map-local demonstrations and reproduces bounded behavior |
+| 42 profiles | AWP/rifle preferences and simulated ability weights inspired by historical HLTV rankings |
+| Local learning | Tabular reinforcement learning, demonstration priors, bot-vs-bot updates, persistent experience, opponent adaptation and team formation learning |
+| Exploration and dialogue | Geometry exploration plus local procedural conversations in the profile languages, without a cloud service, GPU or downloaded language model |
+| Persistence | Validated map-local files for demonstrations, routes, learning, exploration, strategy memory and aim calibration |
 
-## Install on Windows
+## AMXX module (optional)
 
-1. Download **`AiBo-4.3.3-Setup.exe`** from [Releases](https://github.com/keinzwei/AiBo/releases/tag/v4.3.3).
-2. Close Counter-Strike and HLDS.
-3. Run the installer and select your Counter-Strike folder or its `cstrike` folder.
-4. Start a map and check the console:
+Only needed if your own AMXX plugin calls ABPB natives.
 
-   ```text
-   aibo version
-   aibo_human_status
-   aibo_human_aim_status
-   aibo_learning_status
-   aibo_final_status
-   ```
+1. Copy `addons/amxmodx/modules/abpb_amxx.dll`.
+2. Add `abpb` to `addons/amxmodx/configs/modules.ini`, or use `#pragma loadlib abpb`.
+3. Copy `addons/amxmodx/scripting/include/abpb.inc` into your include folder.
+4. Recompile against `abpb.inc`; see `abpb_sample.sma`.
 
-The full Windows package supplies the runtime components used by the installer. The game itself is not included. Replaced files are backed up as `.bak`, `.bak.1`, and so on. The supplied `autobuy.txt` and `listenserver.cfg` are installed unchanged; review their settings if you maintain a customized server.
-
-The DLL is installed at `cstrike/addons/AiBo/bin/AiBo.dll`. Its Metamod entry is:
-
-```text
-win32 addons/AiBo/bin/AiBo.dll
-```
-
-Use the installer for its backup and configuration-merge behavior. A 32-slot server allows up to 31 bots alongside one human. Physical boosting needs compatible collision/Semiclip settings.
-
-## Settings
-
-Edit `cstrike/addons/AiBo/conf/AiBo.cfg` for persistent changes.
-
-| Setting | Default | Purpose |
-| --- | ---: | --- |
-| `aibo_human_aim_level` | `100` | Global Pro aim ceiling; `-1` selects adaptive mode. |
-| `aibo_human_aim_skill` | `100` | Base aim skill. |
-| `aibo_human_reaction_skill` | `100` | Base reaction skill. |
-| `aibo_human_pro_profiles` | `1` | Profile weapon roles. |
-| `aibo_human_hltv_skill` | `1` | Profile ability weighting. |
-| `aibo_human_ct_patrol` | `1` | CT search patrols on Dust2. |
-| `aibo_learning` | `1` | Local learning system. |
-
-Player names and rankings are simulation references, without endorsement or measured equivalence to real players. The ranking-to-ability conversion is AiBo's own design.
-
-## Learning
-
-- **Reinforcement learning:** movement decisions receive bounded rewards from combat and round outcomes.
-- **Imitation learning:** eligible human inputs contribute action priors and reusable demonstrations/routes.
-- **Self-play:** ordinary bot-versus-bot matches provide online updates while the game runs.
-- **Lifelong learning:** map/environment-specific experience is saved and restored between sessions.
-- **Continual adaptation:** visible opponent behavior updates approach/hold estimates.
-- **Multi-agent learning:** teammates share experience and adjust a small set of opening formations.
-
-These mechanisms use local tables and summaries, not neural networks. Self-play does not create an offline training farm. Learning quality depends on experience and does not guarantee a higher win rate. See the [learning guide](LEARNING-ID.md) for controls and limits.
+All natives start with `abpb_`, for example `abpb_get_api_version`, `abpb_get_bot_count`, `abpb_add_bot` and `abpb_is_user_bot`. The module library name is `abpb`, which does not collide with `yapb` or `sypb`.
 
 ## Build
 
-Requirements: **CMake 3.22+, a C++20 compiler, Python 3 and Ninja or Make**. Dependencies are vendored in `ext/`; this snapshot needs no submodule download.
+Requirements: CMake 3.22+, a C++20 compiler, Python 3, and Ninja or Make. Dependencies are vendored under `ext/`.
+
+Native fake-engine tests:
 
 ```sh
 cmake -S . -B build/test -G Ninja \
-  -DCMAKE_BUILD_TYPE=Debug -DAIBO_NATIVE=ON -DAIBO_64BIT=ON \
-  -DAIBO_BUILD_TESTS=ON -DAIBO_WITH_TLS=OFF \
-  -DAIBO_WITH_AMXX=OFF -DAIBO_LTO=OFF
+  -DCMAKE_BUILD_TYPE=Debug -DABPB_NATIVE=ON -DABPB_64BIT=ON \
+  -DABPB_BUILD_TESTS=ON -DABPB_WITH_TLS=OFF \
+  -DABPB_WITH_AMXX=OFF -DABPB_LTO=OFF
 cmake --build build/test --parallel 4
 ctest --test-dir build/test --output-on-failure --timeout 90 --parallel 2
 ```
 
-The [build guide](docs/human-copycat/BUILD.md) covers Windows x86, MinGW, MSVC and the installer. Source snapshots do not include compiled third-party runtime DLLs; the full Windows release package supplies the installer payload. Check the Actions tab for the actual status of the included CI workflow.
+Windows x86 with MSVC:
 
-## Documentation
+```bat
+cmake -S . -B build/windows -A Win32 -DABPB_WITH_TLS=ON -DABPB_WITH_AMXX=OFF -DABPB_LTO=OFF
+cmake --build build/windows --config Release --parallel 4
+python tools/check_dll.py --arch i386 build/windows/Release/ABPB.dll
+```
 
-| Guide | Contents |
-| --- | --- |
-| [Release notes](RELEASE-4.3.3-ID.md) | Changes and defaults. |
-| [Human Copycat](HUMAN_COPYCAT.md) | Integration and persistent formats. |
-| [Human Aim](HUMAN-AIM-4.3.3-ID.md) | Aim, perception and movement. |
-| [Learning](LEARNING-ID.md) | Six local learning mechanisms. |
-| [Exploration and dialogue](EXPLORE-CHAT-ID.md) | Geometry and conversations. |
-| [Player profiles](PRO-PROFILES-4.3.3-ID.md) | Roles, rankings, sources and weighting. |
-| [Final systems](FINAL-GUIDE-ID.md) | Strategy memory and personalities. |
-| [Validation](docs/VALIDATION.md) | Test evidence and limits. |
-| [Build](docs/human-copycat/BUILD.md) | Bot and installer compilation. |
+The [build guide](docs/human-copycat/BUILD.md) covers MinGW/Zig cross-builds and the optional AMXX module.
 
 ## Validation and limitations
 
-The supplied release records **293 passing code tests and 11 passing installer scenarios** on Linux, using a fake-engine harness and native installer core. These do not establish real-game pathfinding success, Windows installer UI behavior, compatibility with every mod or performance against professional players. The original Windows installer and DLL are distributed as supplied, with checksums.
+- The shipped Windows x86 binaries were built with Zig 0.17.1 (Clang, `x86-windows-gnu`) plus CMake/Ninja and link statically against libc++/libc++abi.
+- `ABPB.dll` and `abpb_amxx.dll` pass the 32-bit DLL contract check and were test-loaded with a 32-bit `LoadLibrary` harness.
+- Host tests: **292/293 pass**. The only failure is `aim_baseline_compatibility`, caused by small Windows libm/FP differences from the Linux-recorded baseline (max 0.702°, not a rename or runtime defect).
+- No real Counter-Strike 1.6 server was available in the build environment, so live gameplay still needs testing on your server.
+- The DLL imports the UCRT (`api-ms-win-crt-*`). Windows 10/11 include it; Windows 7 needs KB2999226 or the VC++ 2015–2022 x86 runtime.
+- TLS is disabled in this build (no `cacert.pem`); local graphs and learning are unaffected.
 
-Routes must be physically reachable; geometry checks do not guarantee every map corner can be reached. Wallbang uses remembered legitimate contact rather than continuously refreshed hidden enemy coordinates. Game physics, spread, cooldown and server rules determine outcomes.
+Legacy AiBo documentation is kept for feature details; its old `aibo_*` command names and installer paths are historical. The current names are always `abpb_*` and `addons/ABPB`.
 
 ## Credits and license
 
-Created and maintained by **K9_einzwei** (GitHub: [keinzwei](https://github.com/keinzwei)). AiBo builds on **YaPB, jeefo and the YaPB contributors**, with **PODBot / Count Floyd** ancestry and the supplied **RealBot Human Copycat** extension. Graph authors and all dependency/runtime contributors retain their credits.
+AiBo was created and maintained by **K9_einzwei** ([keinzwei](https://github.com/keinzwei)). AiBo builds on **YaPB, jeefo and the YaPB contributors**, with **PODBot / Count Floyd** ancestry and the **RealBot Human Copycat** extension. ABPB is an identity-renamed fork prepared by the ABPB contributors; all upstream authorship and graph/runtime credits are retained.
 
-The combined fork is **GPL-2.0-or-later**, as declared by the supplied notices. Components retain their own terms. Read [LICENSE](LICENSE), [NOTICE-AiBo.md](NOTICE-AiBo.md), [CREDITS.md](CREDITS.md) and notices under `ext/` and `cfg/addons/AiBo/licenses/`.
+The combined fork is **GPL-2.0-or-later**. Read [LICENSE](LICENSE), [NOTICE-ABPB.md](NOTICE-ABPB.md), [CREDITS.md](CREDITS.md) and the notices under `ext/` and `cfg/addons/ABPB/licenses/`.
 
-Counter-Strike and Half-Life belong to their respective rights holders. AiBo is an independent community project.
-
-Bug reports and contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md). Please report fork-specific issues here.
+Counter-Strike and Half-Life belong to their respective rights holders. This package does not include the game.

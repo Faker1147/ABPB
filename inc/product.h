@@ -1,5 +1,5 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
@@ -37,20 +37,20 @@ public:
   } bi {};
 
 public:
-  CTS_BUILD_STR name { "AiBo" };
-  CTS_BUILD_STR name_lower { "AiBo" };
+  CTS_BUILD_STR name { "ABPB" };
+  CTS_BUILD_STR name_lower { "ABPB" };
   CTS_BUILD_STR year { MODULE_BUILD_YEAR };
-  CTS_BUILD_STR author { "AiBo contributors" };
+  CTS_BUILD_STR author { "ABPB contributors" };
   CTS_BUILD_STR email { "" };
   CTS_BUILD_STR url { "https://yapb.github.io/" };
   CTS_BUILD_STR download { "https://raw.githubusercontent.com/yapb/graph/refs/heads/master" };
   CTS_BUILD_STR upload { "https://graph-worker.yapb.workers.dev" };
-  CTS_BUILD_STR logtag { "AIBO" };
+  CTS_BUILD_STR logtag { "ABPB" };
   CTS_BUILD_STR dtime { MODULE_BUILD_DATE " " MODULE_BUILD_TIME };
   CTS_BUILD_STR date { MODULE_BUILD_DATE };
   CTS_BUILD_STR version { MODULE_VERSION };
-  CTS_BUILD_STR cmd_pri { "aibo" };
-  CTS_BUILD_STR cmd_sec { "ab" };
+  CTS_BUILD_STR cmd_pri { "abpb" };
+  CTS_BUILD_STR cmd_sec { "abp" };
 } product {};
 
 static constexpr class Folders final {

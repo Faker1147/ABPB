@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/module_extra.
+// ABPB test host: unit/module_extra.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -8,7 +8,7 @@
 // radius/light/reachability helpers.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -19,9 +19,9 @@ namespace bot {
 namespace {
 
 void BootModuleExtra (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

@@ -1,15 +1,15 @@
 # amx mod x module (i386 linux/windows only), standalone from the core bot sources
-add_library(yapb_amxx SHARED
-  "yapb_amxx.cpp"
+add_library(abpb_amxx SHARED
+  "abpb_amxx.cpp"
 )
 
 # linux amxx modules carry the _i386 suffix by convention
-set(_amxx_name "yapb_amxx")
+set(_amxx_name "abpb_amxx")
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(_amxx_name "yapb_amxx_i386")
+  set(_amxx_name "abpb_amxx_i386")
 endif()
 
-set_target_properties(yapb_amxx PROPERTIES
+set_target_properties(abpb_amxx PROPERTIES
   PREFIX ""
   OUTPUT_NAME "${_amxx_name}"
   CXX_STANDARD 20
@@ -17,35 +17,35 @@ set_target_properties(yapb_amxx PROPERTIES
   CXX_EXTENSIONS OFF
 )
 
-yapb_configure_target(yapb_amxx NOLTO)
+abpb_configure_target(abpb_amxx NOLTO)
 
 # hide everything but the amxx entry points, like version.lds does for the core
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
-  target_link_options(yapb_amxx PRIVATE -Wl,--version-script=${PROJECT_SOURCE_DIR}/ext/ldscripts/amxx.lds)
+  target_link_options(abpb_amxx PRIVATE -Wl,--version-script=${PROJECT_SOURCE_DIR}/ext/ldscripts/amxx.lds)
 endif()
 
 # windows resource with version info, mirrors the main library
 if(WIN32 AND GIT_FOUND)
   if(IS_ZIG)
     add_custom_command(
-      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/yapb_amxx.res
-      COMMAND zig rc -DVERSION_GENERATED -I${PROJECT_BINARY_DIR} /fo${CMAKE_CURRENT_BINARY_DIR}/yapb_amxx.res -- ${CMAKE_CURRENT_SOURCE_DIR}/yapb_amxx.rc
-      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/yapb_amxx.rc ${VERSION_H}
-      COMMENT "Compiling Windows resource ext/amxx/yapb_amxx.rc"
+      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/abpb_amxx.res
+      COMMAND zig rc -DVERSION_GENERATED -I${PROJECT_BINARY_DIR} /fo${CMAKE_CURRENT_BINARY_DIR}/abpb_amxx.res -- ${CMAKE_CURRENT_SOURCE_DIR}/abpb_amxx.rc
+      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/abpb_amxx.rc ${VERSION_H}
+      COMMENT "Compiling Windows resource ext/amxx/abpb_amxx.rc"
       VERBATIM
     )
-    target_sources(yapb_amxx PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/yapb_amxx.res)
+    target_sources(abpb_amxx PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/abpb_amxx.res)
     # ninja with zig drops .res from the link, pass it explicitly
-    target_link_options(yapb_amxx PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/yapb_amxx.res)
+    target_link_options(abpb_amxx PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/abpb_amxx.res)
   else()
-    target_sources(yapb_amxx PRIVATE "yapb_amxx.rc")
+    target_sources(abpb_amxx PRIVATE "abpb_amxx.rc")
   endif()
 endif()
 
 if(CLANG_OR_GCC)
-  target_compile_options(yapb_amxx PRIVATE -Wall -Wextra -Wno-unused-parameter)
+  target_compile_options(abpb_amxx PRIVATE -Wall -Wextra -Wno-unused-parameter)
 endif()
 
-if(NOT YAPB_WINXP)
-  target_link_libraries(yapb_amxx PRIVATE ystl_printf)
+if(NOT ABPB_WINXP)
+  target_link_libraries(abpb_amxx PRIVATE ystl_printf)
 endif()

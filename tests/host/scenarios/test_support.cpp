@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/support_{pure,conf,engine}.
+// ABPB test host: unit/support_{pure,conf,engine}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -10,7 +10,7 @@
 
 #include <cstdio>
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -65,10 +65,10 @@ TEST_CASE ("unit/support_pure") {
 TEST_CASE ("unit/support_conf") {
   // light prefix only: postload (logger, cvars, cs load), no server lifecycle
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -163,10 +163,10 @@ TEST_CASE ("unit/support_conf") {
 
 TEST_CASE ("unit/support_engine") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -324,13 +324,13 @@ TEST_CASE ("unit/support_engine") {
 
 TEST_CASE ("unit/support_welcome") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // listen server: unlocks the welcome path (dedicated servers skip it)
   engine.SetDedicatedServer (false);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

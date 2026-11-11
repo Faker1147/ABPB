@@ -1,5 +1,5 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
@@ -327,13 +327,13 @@ public:
   // global helper for sending message to correct channel
   template <typename... Args> void Msg (const char *fmt, Args &&...args);
 
-  // current debug level (aibo_debug 0-4)
+  // current debug level (abpb_debug 0-4)
   int DebugLevel () const;
 
   // check if debug output for given level is enabled (default: any level >= 1)
   bool IsDebug (int level = 1) const;
 
-  // unified debug output: forwards to msg () only when aibo_debug >= level
+  // unified debug output: forwards to msg () only when abpb_debug >= level
   template <typename... Args> void Debug (const char *fmt, Args &&...args);
   template <typename... Args> void Debug (int level, const char *fmt, Args &&...args);
 
@@ -385,7 +385,7 @@ template <typename... Args> inline void Control::Msg (const char *fmt, Args &&..
   }
 }
 
-// unified debug output: forwards to msg () only when aibo_debug >= level
+// unified debug output: forwards to msg () only when abpb_debug >= level
 template <typename... Args> inline void Control::Debug (const char *fmt, Args &&...args) {
   Debug (1, fmt, ystl::forward<Args> (args)...);
 }

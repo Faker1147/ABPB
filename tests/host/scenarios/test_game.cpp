@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/engine_{game,cvars,state}.
+// ABPB test host: unit/engine_{game,cvars,state}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -8,7 +8,7 @@
 // hitbox enumeration. Modern staging (flag asserts need a Modern game).
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -18,7 +18,7 @@ namespace bot {
 
 TEST_CASE ("unit/engine_game [modern]") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "-modern/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "-modern/cstrike");
 
   // breakable seeded before activation for the list-path checks below
   edict_t *seed = engine.SpawnEntity ("func_breakable");
@@ -28,7 +28,7 @@ TEST_CASE ("unit/engine_game [modern]") {
   seed->v.movetype = MOVETYPE_PUSH;
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_GAMEDIR "-modern/cstrike/dlls/" AIBO_TEST_CSSUFFIX, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs ("cstrike/dlls/" ABPB_TEST_CSSUFFIX, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -292,10 +292,10 @@ TEST_CASE ("unit/engine_game [modern]") {
 
 TEST_CASE ("unit/engine_cvars") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -355,10 +355,10 @@ TEST_CASE ("unit/engine_cvars") {
 
 TEST_CASE ("unit/engine_state [modern]") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "-modern/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "-modern/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_GAMEDIR "-modern/cstrike/dlls/" AIBO_TEST_CSSUFFIX, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs ("cstrike/dlls/" ABPB_TEST_CSSUFFIX, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

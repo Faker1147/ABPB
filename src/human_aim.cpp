@@ -6,7 +6,7 @@
 #include <cstring>
 #include <filesystem>
 #include <string>
-#include <aibo.h>
+#include <abpb.h>
 namespace bot {
 namespace {
 struct Contact {

@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/clients_track.
+// ABPB test host: unit/clients_track.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -7,7 +7,7 @@
 // bot/human flags, origin tracking) and the edict accessors.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -17,10 +17,10 @@ namespace bot {
 
 TEST_CASE ("unit/clients_track") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

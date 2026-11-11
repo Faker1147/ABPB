@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 #
-# AiBo, started from PODBot by Count Floyd
+# ABPB, started from PODBot by Count Floyd
 # Maintained by YaPB Team <yapb@jeefo.net>
 #
 # SPDX-License-Identifier: Unlicense
 #
-# Verifies the binary ABI contract of a built aibo shared object. The
+# Verifies the binary ABI contract of a built abpb shared object. The
 # contract itself is read from the linker version script, so the checker
 # and the exported surface never drift:
 #
@@ -18,8 +18,8 @@
 #
 # Pure stdlib: parses ELF directly, no readelf/objdump needed.
 #
-#   python3 tools/check_abi.py build/linux-x86/aibo.so
-#   python3 tools/check_abi.py --arch amd64 --max-glibc 2.17 build/linux-amd64/aibo_amd64.so
+#   python3 tools/check_abi.py build/linux-x86/abpb.so
+#   python3 tools/check_abi.py --arch amd64 --max-glibc 2.17 build/linux-amd64/abpb_amd64.so
 #
 
 import argparse
@@ -52,7 +52,7 @@ ARCHES = {
     'riscv64': (243, ELFCLASS64, 'RISC-V'),
 }
 
-# the only shared libraries a aibo module may pull in; libstdc++/libgcc_s
+# the only shared libraries a abpb module may pull in; libstdc++/libgcc_s
 # are deliberately absent, the bot is built without a C++ runtime
 ALLOWED_NEEDED = frozenset({
     'libc.so.6',
@@ -213,7 +213,7 @@ class Elf(object):
 
         strtab = self._dynstr()
 
-        # version definitions: index -> node name (e.g. AIBO_ABI_1.0)
+        # version definitions: index -> node name (e.g. ABPB_ABI_1.0)
         section = self.sec.get('.gnu.version_d')
         if section:
             off, end = section['offset'], section['offset'] + section['size']
@@ -354,7 +354,7 @@ def check(path, arch, max_glibc, version_script):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='verify the aibo binary ABI contract')
+    parser = argparse.ArgumentParser(description='verify the abpb binary ABI contract')
     parser.add_argument('library', help='shared object to check')
     parser.add_argument('--arch', default='i386', choices=sorted(ARCHES),
                         help='target architecture (default: i386)')

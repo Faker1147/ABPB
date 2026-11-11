@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/practice_{storage,update}.
+// ABPB test host: unit/practice_{storage,update}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -9,7 +9,7 @@
 // (friend, tests only); everything else uses the public API.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -69,9 +69,9 @@ void BuildPracticeGraph () {
 }
 
 void BootPractice (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -95,7 +95,7 @@ void BootPractice (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
   cv_quota.Set (10);
 }
 
-// worker runs inline under AIBO_SINGLE_THREADED, so load/update are sync here
+// worker runs inline under ABPB_SINGLE_THREADED, so load/update are sync here
 void RebuildVisForPractice () {
   vistab.StartRebuild ();
 

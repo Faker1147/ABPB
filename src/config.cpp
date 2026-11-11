@@ -1,11 +1,11 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 namespace bot {
 
@@ -2163,7 +2163,7 @@ const char *Config::Translate (ystl::StringRef input) {
     return language_[hash].chars ();
   }
 
-  // remember untranslated strings, so they can be listed with 'aibo debug translate'
+  // remember untranslated strings, so they can be listed with 'abpb debug translate'
   if (!missing_translations_.exists (hash)) {
     missing_translations_[hash] = input.chars ();
   }

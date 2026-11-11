@@ -1,4 +1,4 @@
-// AiBo 4.3.3 transactional installer engine. GPL-2.0-or-later.
+// ABPB 4.3.3 transactional installer engine. GPL-2.0-or-later.
 #include "install_core.h"
 #include <algorithm>
 #include <chrono>
@@ -17,10 +17,10 @@
   #include <windows.h>
   #include <tlhelp32.h>
 #endif
-namespace aibo_setup {
+namespace abpb_setup {
 namespace fs = std::filesystem;
 namespace {
-constexpr const char *kDll = "addons/AiBo/bin/AiBo.dll";
+constexpr const char *kDll = "addons/ABPB/bin/ABPB.dll";
 constexpr const char *kIni = "addons/metamod/plugins.ini";
 std::string Lower (std::string s) {
   for (auto &c : s)
@@ -87,7 +87,7 @@ bool BotModule (const std::string &name) {
   const auto path = Slash (Lower (name));
   const auto slash = path.find_last_of ('/');
   const auto file = path.substr (slash == std::string::npos ? 0 : slash + 1);
-  return (file.starts_with ("aibo") || file.starts_with ("yapb") || file.starts_with ("realbot")) &&
+  return (file.starts_with ("abpb") || file.starts_with ("yapb") || file.starts_with ("realbot")) &&
          (file.ends_with (".dll") || file.ends_with (".so") || file.ends_with (".dylib"));
 }
 bool Amxx (const std::string &s) {
@@ -139,7 +139,7 @@ void RunningGame () {
     } while (Process32NextW (snapshot, &e));
   CloseHandle (snapshot);
   if (running)
-    throw std::runtime_error ("Tutup Counter-Strike dan HLDS sebelum memasang AiBo.");
+    throw std::runtime_error ("Tutup Counter-Strike dan HLDS sebelum memasang ABPB.");
 #endif
 }
 void Write (const fs::path &p, const std::string &bytes) {
@@ -190,13 +190,13 @@ uint32_t U32 (const std::string &s, size_t n) {
 }
 void CheckDll (const std::string &s) {
   if (s.size () < 128 || s.substr (0, 2) != "MZ")
-    throw std::runtime_error ("AiBo.dll bukan file PE Windows.");
+    throw std::runtime_error ("ABPB.dll bukan file PE Windows.");
   const size_t pe = U32 (s, 60);
   if (pe > s.size () - 24 || s.substr (pe, 4) != std::string ("PE\0\0", 4) || U16 (s, pe + 4) != 0x14c || !(U16 (s, pe + 22) & 0x2000))
-    throw std::runtime_error ("AiBo.dll harus berupa DLL Windows x86 untuk CS 1.6.");
-  const std::u16string marker = u"AiBo 4.3.3";
+    throw std::runtime_error ("ABPB.dll harus berupa DLL Windows x86 untuk CS 1.6.");
+  const std::u16string marker = u"ABPB 4.3.3";
   if (s.find (std::string (reinterpret_cast<const char *> (marker.data ()), marker.size () * 2)) == std::string::npos)
-    throw std::runtime_error ("Versi/identitas AiBo.dll tidak sesuai installer 4.3.3.");
+    throw std::runtime_error ("Versi/identitas ABPB.dll tidak sesuai installer 4.3.3.");
 }
 void CheckSource (const fs::path &payload) {
   CheckDll (Read (payload / kDll));
@@ -208,23 +208,23 @@ void CheckSource (const fs::path &payload) {
     if (BotModule (t[1])) {
       ++bot_lines;
       if (t[0] != "win32" || Slash (t[1]) != kDll)
-        throw std::runtime_error ("plugins.ini payload tidak menunjuk ke addons/AiBo/bin/AiBo.dll.");
+        throw std::runtime_error ("plugins.ini payload tidak menunjuk ke addons/ABPB/bin/ABPB.dll.");
     }
   }
   if (bot_lines != 1)
-    throw std::runtime_error ("plugins.ini harus memuat tepat satu entri AiBo.dll.");
+    throw std::runtime_error ("plugins.ini harus memuat tepat satu entri ABPB.dll.");
   std::map<std::string, std::string> cfg;
-  for (const auto &line : Lines (Read (payload / "addons/AiBo/conf/AiBo.cfg"))) {
+  for (const auto &line : Lines (Read (payload / "addons/ABPB/conf/ABPB.cfg"))) {
     const auto t = Tokens (line);
     if (t.size () >= 2)
       cfg[t[0]] = t[1];
   }
   for (const auto *name : { "human_aim_level", "human_aim_skill", "human_reaction_skill" })
-    if (cfg[std::string ("aibo_") + name] != "100")
+    if (cfg[std::string ("abpb_") + name] != "100")
       throw std::runtime_error ("Default HUMAN AIM payload harus 100.");
   for (const auto *name : { "human_copycat", "human_aim_adaptive", "human_aim_techniques", "human_aim_wallbang", "human_aim_preaim",
          "human_aim_quickswitch", "human_aim_crouchhop", "human_movement", "human_pro_profiles", "human_hltv_skill", "human_ct_patrol" })
-    if (cfg[std::string ("aibo_") + name] != "1")
+    if (cfg[std::string ("abpb_") + name] != "1")
       throw std::runtime_error ("Teknik HUMAN AIM payload belum aktif lengkap.");
 }
 struct Change {
@@ -235,24 +235,24 @@ struct Change {
 }
 std::string MergePlugins (const std::string &text) {
   auto lines = Lines (text);
-  bool amxx = false, aibo = false;
+  bool amxx = false, abpb = false;
   for (auto &line : lines) {
     const auto t = Tokens (line);
     if (t.size () < 2 || (Lower (t[0]) != "win32" && Lower (t[0]) != "linux"))
       continue;
     if (BotModule (t[1])) {
-      if (Lower (t[0]) == "win32" && Slash (t[1]) == kDll && !aibo)
-        aibo = true;
+      if (Lower (t[0]) == "win32" && Slash (t[1]) == kDll && !abpb)
+        abpb = true;
       else
-        line = "; disabled by AiBo 4.3.3: " + line;
+        line = "; disabled by ABPB 4.3.3: " + line;
     }
     else if (Lower (t[0]) == "win32" && Amxx (t[1]))
       amxx = true;
   }
   if (!amxx)
     lines.emplace_back ("win32 addons/amxmodx/dlls/amxmodx_mm.dll");
-  if (!aibo)
-    lines.emplace_back ("win32 addons/AiBo/bin/AiBo.dll");
+  if (!abpb)
+    lines.emplace_back ("win32 addons/ABPB/bin/ABPB.dll");
   return Join (lines, text);
 }
 std::string MergeLiblist (const std::string &text) {
@@ -267,7 +267,7 @@ std::string MergeLiblist (const std::string &text) {
       added = true;
     }
     else
-      line = "// replaced by AiBo 4.3.3: " + line;
+      line = "// replaced by ABPB 4.3.3: " + line;
   }
   if (!added)
     lines.emplace_back ("gamedll \"addons/metamod/dlls/metamod.dll\"");
@@ -309,7 +309,7 @@ Result Install (const fs::path &input, const fs::path &requested, bool check_onl
     const auto key = rel.generic_string ();
     if (key == kIni || key == "liblist.gam" || key.find ("/logs/") != std::string::npos)
       continue;
-    const bool own = key.starts_with ("addons/AiBo/") || key == "autobuy.txt" || key == "listenserver.cfg";
+    const bool own = key.starts_with ("addons/ABPB/") || key == "autobuy.txt" || key == "listenserver.cfg";
     NoLinks (game / rel);
     const bool preserve_graph = key.ends_with (".graph") && fs::exists (game / rel);
     if ((!own || preserve_graph) && fs::exists (game / rel)) {
@@ -331,7 +331,7 @@ Result Install (const fs::path &input, const fs::path &requested, bool check_onl
       if (!entry.is_regular_file ())
         continue;
       const auto relative = entry.path ().lexically_relative (legacy);
-      const auto rel = fs::path ("addons/AiBo") / folder / relative;
+      const auto rel = fs::path ("addons/ABPB") / folder / relative;
       if (!fs::exists (game / rel) && !plan.count (rel.generic_string ())) {
         add (rel, Read (entry.path ()));
         ++result.migrated;
@@ -347,7 +347,7 @@ Result Install (const fs::path &input, const fs::path &requested, bool check_onl
     return result;
   }
   const auto stamp = std::chrono::high_resolution_clock::now ().time_since_epoch ().count ();
-  result.backup = game / "addons" / ("AiBo-backup-4.3.3-" + std::to_string (stamp));
+  result.backup = game / "addons" / ("ABPB-backup-4.3.3-" + std::to_string (stamp));
   NoLinks (result.backup);
   fs::create_directories (result.backup);
   std::vector<Change *> ordered;
@@ -401,7 +401,7 @@ Result Install (const fs::path &input, const fs::path &requested, bool check_onl
       }
     }
     if (found != 1)
-      throw std::runtime_error ("Entri AiBo.dll terpasang tidak tunggal.");
+      throw std::runtime_error ("Entri ABPB.dll terpasang tidak tunggal.");
   } catch (...) {
     bool restored = true;
     for (auto it = committed.rbegin (); it != committed.rend (); ++it) {
@@ -431,12 +431,12 @@ Result Install (const fs::path &input, const fs::path &requested, bool check_onl
       }
     }
     if (!restored)
-      throw std::runtime_error ("Instalasi gagal; sebagian file perlu dipulihkan dari folder AiBo-backup-4.3.3 di addons.");
+      throw std::runtime_error ("Instalasi gagal; sebagian file perlu dipulihkan dari folder ABPB-backup-4.3.3 di addons.");
     throw;
   }
   result.files = static_cast<unsigned> (ordered.size ());
   const auto report =
-    "AiBo 4.3.3 installed\r\nDLL: addons/AiBo/bin/AiBo.dll\r\nHUMAN AIM: 100 (Pro profile)\r\nBackup: " + result.backup.filename ().string () +
+    "ABPB 4.3.3 installed\r\nDLL: addons/ABPB/bin/ABPB.dll\r\nHUMAN AIM: 100 (Pro profile)\r\nBackup: " + result.backup.filename ().string () +
     "\r\n";
   try {
     Write (result.backup / "INSTALL-RESULT.txt", report);
@@ -444,4 +444,4 @@ Result Install (const fs::path &input, const fs::path &requested, bool check_onl
   }
   return result;
 }
-} // namespace aibo_setup
+} // namespace abpb_setup

@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/module_api.
+// ABPB test host: unit/module_api.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -7,7 +7,7 @@
 // and every BotModule query/command on a live graph with a bot.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -18,9 +18,9 @@ namespace bot {
 namespace {
 
 void BootModule (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

@@ -72,11 +72,11 @@ foreach(_name IN LISTS _names)
         message(WARNING "DiscoverTests.cmake: cannot mirror game dll for '${_name}' (${_link_result})")
     endif()
 
-    set(_case_env "AIBO_SINGLE_THREADED=1;${_home}=${_workdir}/home;AIBO_TEST_WORKDIR=${_workdir}")
+    set(_case_env "ABPB_SINGLE_THREADED=1;${_home}=${_workdir}/home;ABPB_TEST_WORKDIR=${_workdir}")
 
     # ctest include files use the positional add_test form (not NAME/COMMAND)
     file(APPEND "${TEST_OUTPUT}"
-        "add_test(aibo_${_id} \"${TEST_EXECUTABLE}\" \"--filter=${_name}\")\n"
-        "set_tests_properties(aibo_${_id} PROPERTIES TIMEOUT 300 WORKING_DIRECTORY \"${_workdir}\" ENVIRONMENT \"${_case_env}\")\n"
+        "add_test(abpb_${_id} \"${TEST_EXECUTABLE}\" \"--filter=${_name}\")\n"
+        "set_tests_properties(abpb_${_id} PROPERTIES TIMEOUT 300 WORKING_DIRECTORY \"${_workdir}\" ENVIRONMENT \"${_case_env}\")\n"
     )
 endforeach()

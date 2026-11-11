@@ -1,5 +1,5 @@
 //
-// AiBo test host: Tier0 pure-logic cases (no engine boot).
+// ABPB test host: Tier0 pure-logic cases (no engine boot).
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -8,7 +8,7 @@
 // the constexpr id names and bitmasks can be checked without a server.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -20,10 +20,10 @@ TEST_CASE ("tier0/weapon_data") {
   // light prefix only: postload (logger, cvars, cs load) without any
   // server lifecycle. missing gamedef.cfg/weapon.cfg keep the defaults.
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

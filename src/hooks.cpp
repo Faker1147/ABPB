@@ -1,11 +1,11 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 namespace bot {
 
@@ -122,7 +122,7 @@ ystl::SharedLibrary::Func EntityLinkHook::LookupSymbol (ystl::SharedLibrary::Han
     return ret;
   }
 
-  // if requested module is aibo module, put in cache the looked up symbol
+  // if requested module is abpb module, put in cache the looked up symbol
   if (self != module) {
     return resolve (module);
   }

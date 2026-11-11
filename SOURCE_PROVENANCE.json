@@ -1,5 +1,9 @@
 {
+  "product": "ABPB",
   "fork": "AiBo",
+  "fork_of": "AiBo 4.3.3",
+  "aibo_tag": "v4.3.3",
+  "aibo_commit": "760180e3c9f52f5e8720833d750edc7ec8beb2e0",
   "version": "4.3.3",
   "base_repository": "https://github.com/yapb/yapb/",
   "base_commit": "7985904584a0755b216e17cc5de8c5fd28953895",

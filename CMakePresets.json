@@ -35,7 +35,7 @@
       ],
       "toolchainFile": "cmake/toolchains/linux-amd64.cmake",
       "cacheVariables": {
-        "AIBO_64BIT": "ON"
+        "ABPB_64BIT": "ON"
       }
     },
     {
@@ -44,9 +44,9 @@
         "base"
       ],
       "cacheVariables": {
-        "AIBO_64BIT": "ON",
-        "AIBO_BUILD_TESTS": "ON",
-        "AIBO_SANITIZE": "address",
+        "ABPB_64BIT": "ON",
+        "ABPB_BUILD_TESTS": "ON",
+        "ABPB_SANITIZE": "address",
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
@@ -57,7 +57,7 @@
         "base"
       ],
       "cacheVariables": {
-        "AIBO_SANITIZE": "address",
+        "ABPB_SANITIZE": "address",
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
@@ -68,7 +68,7 @@
       ],
       "toolchainFile": "cmake/toolchains/linux-x86-nosimd.cmake",
       "cacheVariables": {
-        "AIBO_NOSIMD": "ON"
+        "ABPB_NOSIMD": "ON"
       }
     },
     {
@@ -92,7 +92,7 @@
       ],
       "toolchainFile": "cmake/toolchains/apple-amd64.cmake",
       "cacheVariables": {
-        "AIBO_64BIT": "ON"
+        "ABPB_64BIT": "ON"
       }
     },
     {
@@ -109,7 +109,7 @@
       ],
       "toolchainFile": "cmake/toolchains/windows-amd64.cmake",
       "cacheVariables": {
-        "AIBO_64BIT": "ON"
+        "ABPB_64BIT": "ON"
       }
     },
     {
@@ -142,7 +142,7 @@
         "base"
       ],
       "cacheVariables": {
-        "AIBO_WINXP": "ON"
+        "ABPB_WINXP": "ON"
       }
     },
     {
@@ -153,12 +153,12 @@
         "base"
       ],
       "cacheVariables": {
-        "AIBO_64BIT": "ON",
-        "AIBO_NATIVE": "ON",
-        "AIBO_BUILD_TESTS": "ON",
-        "AIBO_WITH_TLS": "OFF",
-        "AIBO_LTO": "OFF",
-        "AIBO_STATIC_LINKENT": "ON",
+        "ABPB_64BIT": "ON",
+        "ABPB_NATIVE": "ON",
+        "ABPB_BUILD_TESTS": "ON",
+        "ABPB_WITH_TLS": "OFF",
+        "ABPB_LTO": "OFF",
+        "ABPB_STATIC_LINKENT": "ON",
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
@@ -170,12 +170,12 @@
         "base"
       ],
       "cacheVariables": {
-        "AIBO_64BIT": "ON",
-        "AIBO_NATIVE": "ON",
-        "AIBO_BUILD_TESTS": "ON",
-        "AIBO_WITH_TLS": "OFF",
-        "AIBO_LTO": "OFF",
-        "AIBO_STATIC_LINKENT": "ON",
+        "ABPB_64BIT": "ON",
+        "ABPB_NATIVE": "ON",
+        "ABPB_BUILD_TESTS": "ON",
+        "ABPB_WITH_TLS": "OFF",
+        "ABPB_LTO": "OFF",
+        "ABPB_STATIC_LINKENT": "ON",
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
@@ -211,7 +211,7 @@
       "generator": "Visual Studio 18 2026",
       "architecture": "x64",
       "cacheVariables": {
-        "AIBO_64BIT": "ON"
+        "ABPB_64BIT": "ON"
       }
     }
   ],

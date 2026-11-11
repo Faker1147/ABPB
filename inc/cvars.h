@@ -1,5 +1,5 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
@@ -124,7 +124,7 @@ inline ConVar cv_ignore_objectives ("ignore_objectives", "0", "Allows or disallo
 // manager
 inline ConVar cv_autovacate ("autovacate", "1", "Kicks bots to automatically make room for human players.");
 inline ConVar cv_autovacate_keep_slots ("autovacate_keep_slots", "1", "How many slots the autovacate feature should keep for human players.", true, 1.0f, 8.0f);
-inline ConVar cv_kick_after_player_connect ("kick_after_player_connect", "1", "Kicks the bot immediately when a human player joins the server (aibo_autovacate must be enabled).");
+inline ConVar cv_kick_after_player_connect ("kick_after_player_connect", "1", "Kicks the bot immediately when a human player joins the server (abpb_autovacate must be enabled).");
 #if defined(YSTL_TESTS)
 inline constexpr const char *kQuotaDefault = "9";
 #else
@@ -132,7 +132,7 @@ inline constexpr const char *kQuotaDefault = "31";
 #endif
 inline ConVar cv_quota ("quota", kQuotaDefault, "Specifies the number of bots to be added to the game.", true, 0.0f, static_cast<float> (kGameMaxPlayers));
 inline ConVar cv_quota_mode ("quota_mode", "normal", "Specifies the type of quota.\nAllowed values: 'normal', 'fill', and 'match'.\nIf 'fill', the server will adjust bots to keep N players in the game.\nIf 'match', the server will maintain a certain number of bots relative to humans.", false);
-inline ConVar cv_quota_match ("quota_match", "0", "Number of players to match if aibo_quota_mode is set to 'match'.", true, 0.0f, static_cast<float> (kGameMaxPlayers));
+inline ConVar cv_quota_match ("quota_match", "0", "Number of players to match if abpb_quota_mode is set to 'match'.", true, 0.0f, static_cast<float> (kGameMaxPlayers));
 inline ConVar cv_think_fps ("think_fps", "40.0", "Specifies how many times per second the bot code will run.", true, 10.0f, 90.0f);
 inline ConVar cv_think_fps_disable ("think_fps_disable", "1", "Allows to completely disable think fps on Xash3D.", true, 0.0f, 1.0f, Var::Xash3D);
 inline ConVar cv_autokill_delay ("autokill_delay", "0.0", "Specifies the amount of time in seconds after which bots will be killed if no humans are left alive.", true, 0.0f, 90.0f);
@@ -142,11 +142,11 @@ inline ConVar cv_join_team ("join_team", "any", "Forces all bots to join the tea
 inline ConVar cv_join_delay ("join_delay", "5.0", "Specifies after how many seconds bots should start to join the game after the changelevel.", true, 0.0f, 30.0f);
 inline ConVar cv_name_prefix ("name_prefix", "", "All bot names will be prefixed with the string specified by this cvar.", false);
 inline ConVar cv_difficulty ("difficulty", "3", "All bots difficulty level. Changing at runtime will affect already created bots.", true, 0.0f, 4.0f);
-inline ConVar cv_difficulty_min ("difficulty_min", "-1", "Lower bound of random difficulty on bot creation. Only affects newly created bots. -1 means only aibo_difficulty is used.", true, -1.0f, 4.0f);
-inline ConVar cv_difficulty_max ("difficulty_max", "-1", "Upper bound of random difficulty on bot creation. Only affects newly created bots. -1 means only aibo_difficulty is used.", true, -1.0f, 4.0f);
+inline ConVar cv_difficulty_min ("difficulty_min", "-1", "Lower bound of random difficulty on bot creation. Only affects newly created bots. -1 means only abpb_difficulty is used.", true, -1.0f, 4.0f);
+inline ConVar cv_difficulty_max ("difficulty_max", "-1", "Upper bound of random difficulty on bot creation. Only affects newly created bots. -1 means only abpb_difficulty is used.", true, -1.0f, 4.0f);
 inline ConVar cv_difficulty_auto ("difficulty_auto", "0", "Allows each bot to balance its own difficulty based on the kd-ratio of the team.\nAllowed values: '0', '1', '2'.\nIf '0', difficulty auto-balancing is disabled.\nIf '1', all bots balance their difficulty.\nIf '2', only bots in the team with human players balance their difficulty (bot-only team stays at configured difficulty).", true, 0.0f, 2.0f);
 inline ConVar cv_difficulty_auto_balance_interval ("difficulty_auto_balance_interval", "30", "Interval at which bots will balance their difficulty.", true, 30.0f, 240.0f);
-inline ConVar cv_difficulty_lock ("difficulty_lock", "1", "Keeps the difficulty of manually added bots fixed, ignoring aibo_difficulty and aibo_difficulty_auto changes.", true, 0.0f, 1.0f);
+inline ConVar cv_difficulty_lock ("difficulty_lock", "1", "Keeps the difficulty of manually added bots fixed, ignoring abpb_difficulty and abpb_difficulty_auto changes.", true, 0.0f, 1.0f);
 inline ConVar cv_show_avatars ("show_avatars", "0", "Enables or disables displaying bot avatars in front of their names in the scoreboard. Note that currently you can only see avatars of your teammates.", true, 0.0f, 1.0f);
 inline ConVar cv_show_latency ("show_latency", "0", "Enables latency display in the scoreboard.\nAllowed values: '0', '1', '2'.\nIf '0', there is nothing displayed.\nIf '1', there is a 'BOT' string.\nIf '2', fake ping is displayed.", true, 0.0f, 2.0f);
 inline ConVar cv_save_bots ("save_bots", "1", "Allows saving bot data upon changelevel, so bots will be restored after a map change.\nAllowed values: '0', '1', '2'.\nIf '0', nothing is saved.\nIf '1', only quota is saved.\nIf '2', full bot data is saved.", true, 0.0f, 2.0f);
@@ -174,7 +174,7 @@ inline ConVar cv_check_enemy_rendering ("check_enemy_rendering", "0", "Enables o
 inline ConVar cv_check_enemy_invincibility ("check_enemy_invincibility", "0", "Enables or disables checking enemy invincibility. Useful for some mods.");
 inline ConVar cv_stab_close_enemies ("stab_close_enemies", "1", "Enables or disables the bot's ability to stab the enemy with the knife if the bot is in good condition.");
 inline ConVar cv_use_engine_pvs_check ("use_engine_pvs_check", "1", "Uses the engine to check the potential visibility of an enemy.");
-inline ConVar cv_use_hitbox_enemy_targeting ("use_hitbox_enemy_targeting", "0", "Uses hitbox-based enemy targeting, instead of offset-based. Use with aibo_use_engine_pvs_check enabled to reduce CPU usage.");
+inline ConVar cv_use_hitbox_enemy_targeting ("use_hitbox_enemy_targeting", "0", "Uses hitbox-based enemy targeting, instead of offset-based. Use with abpb_use_engine_pvs_check enabled to reduce CPU usage.");
 inline ConVar cv_aim_trace_consider_glass ("aim_trace_consider_glass", "0", "Bots will consider glass when deciding to shoot enemies. Required for very special maps only.");
 inline ConVar cv_dont_shoot ("dont_shoot", "0", "If enabled, bots are not allowed to press the attack button, thus forbidding them from shooting.");
 inline ConVar cv_enable_bullet_spread ("enable_bullet_spread", "0", "Enables or disables bullet spread for bots on servers running without metamod.");
@@ -228,7 +228,7 @@ inline ConVar cv_version ("version", product.version.chars (), Var::ReadOnly);
 
 // config
 inline ConVar cv_bind_menu_key ("bind_menu_key", "=", "Binds the specified key for opening the bot menu.", false);
-inline ConVar cv_ignore_cvars_on_changelevel ("ignore_cvars_on_changelevel", "aibo_quota,aibo_autovacate", "Specifies a comma separated list of bot cvars that will not be overwritten by the config on changelevel.", false);
+inline ConVar cv_ignore_cvars_on_changelevel ("ignore_cvars_on_changelevel", "abpb_quota,abpb_autovacate", "Specifies a comma separated list of bot cvars that will not be overwritten by the config on changelevel.", false);
 
 // engine
 inline ConVar cv_csdm_mode ("csdm_mode", "0", "Enables or disables CSDM / FFA mode for bots.\nAllowed values: '0', '1', '2', '3'.\nIf '0', CSDM / FFA mode is auto-detected.\nIf '1', CSDM / FFA mode is enabled.\nIf '2', CSDM / FFA mode is disabled.\nIf '3', FFA mode is enabled.", true, 0.0f, 3.0f);

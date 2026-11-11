@@ -1,5 +1,5 @@
 #
-# AiBo, based on PODBot by Count Floyd
+# ABPB, based on PODBot by Count Floyd
 # Maintained by YaPB Team <yapb@jeefo.net>
 #
 # SPDX-License-Identifier: Unlicense
@@ -16,28 +16,28 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-project(aibo VERSION 4.3.3 DESCRIPTION "Artificial Intelligence Bot" HOMEPAGE_URL "https://yapb.github.io/" LANGUAGES C CXX)
+project(abpb VERSION 4.3.3 DESCRIPTION "Artificial Intelligence Bot" HOMEPAGE_URL "https://yapb.github.io/" LANGUAGES C CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-option(AIBO_64BIT "Build as 64-bit binary" OFF)
-option(AIBO_NATIVE "Configure compiler for a native machine build" OFF)
-option(AIBO_WINXP "Configure MSVC build for Windows XP compatible binary" OFF)
-option(AIBO_NOSIMD "Disable all SIMD or NEON optimizations" OFF)
-option(AIBO_STATIC_LINKENT "Use predefined entity link list" OFF)
-option(AIBO_LTO "Enable link-time optimization" ON)
-option(AIBO_SANITIZE "Enable sanitizers, e.g. address or address,undefined (dev builds)" "")
-option(AIBO_WITH_TLS "Enable HTTPS support via vendored mbedtls" ON)
-option(AIBO_BUILD_TESTS "Build test host (fake engine harness, native gcc/clang only, requires -DAIBO_64BIT=ON)" OFF)
-option(AIBO_WITH_AMXX "Build AMX Mod X module (i386 only)" ON)
+option(ABPB_64BIT "Build as 64-bit binary" OFF)
+option(ABPB_NATIVE "Configure compiler for a native machine build" OFF)
+option(ABPB_WINXP "Configure MSVC build for Windows XP compatible binary" OFF)
+option(ABPB_NOSIMD "Disable all SIMD or NEON optimizations" OFF)
+option(ABPB_STATIC_LINKENT "Use predefined entity link list" OFF)
+option(ABPB_LTO "Enable link-time optimization" ON)
+option(ABPB_SANITIZE "Enable sanitizers, e.g. address or address,undefined (dev builds)" "")
+option(ABPB_WITH_TLS "Enable HTTPS support via vendored mbedtls" ON)
+option(ABPB_BUILD_TESTS "Build test host (fake engine harness, native gcc/clang only, requires -DABPB_64BIT=ON)" OFF)
+option(ABPB_WITH_AMXX "Build AMX Mod X module (i386 only)" ON)
 
 # android (ndk toolchain) fixes the abi for us: follow the pointer size instead of
-# the manual flag, so the parent never has to force AIBO_64BIT before adding us
+# the manual flag, so the parent never has to force ABPB_64BIT before adding us
 if(ANDROID)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(AIBO_64BIT ON CACHE BOOL "Build as 64-bit binary" FORCE)
+    set(ABPB_64BIT ON CACHE BOOL "Build as 64-bit binary" FORCE)
   else()
-    set(AIBO_64BIT OFF CACHE BOOL "Build as 64-bit binary" FORCE)
+    set(ABPB_64BIT OFF CACHE BOOL "Build as 64-bit binary" FORCE)
   endif()
 endif()
 
@@ -71,16 +71,16 @@ if(_PROC STREQUAL "aarch64")
   set(LIB_SUFFIX "_arm64")
 elseif(_PROC MATCHES "^riscv")
   set(LIB_SUFFIX "_riscv64d")
-elseif(AIBO_64BIT)
+elseif(ABPB_64BIT)
   set(LIB_SUFFIX "_amd64")
 else()
   set(LIB_SUFFIX "")
 endif()
 
-set(TARGET_NAME "AiBo${LIB_SUFFIX}")
+set(TARGET_NAME "ABPB${LIB_SUFFIX}")
 
-include(AiboVersion)
-include(AiboFlags)
+include(ABPBVersion)
+include(ABPBFlags)
 
 set(SRC
   "src/analyze.cpp"
@@ -153,22 +153,22 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   CXX_EXTENSIONS OFF
 )
 
-# android expects lib<name>.so, keep the default prefix (libaibo_android_<arch>.so)
+# android expects lib<name>.so, keep the default prefix (libabpb_android_<arch>.so)
 if(NOT ANDROID)
   set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 endif()
 
-aibo_configure_target(${PROJECT_NAME} STRICT DIST)
+abpb_configure_target(${PROJECT_NAME} STRICT DIST)
 
-# unity + pch: every src/*.cpp starts with <aibo.h>, parse it once (off for Debug and Android)
+# unity + pch: every src/*.cpp starts with <abpb.h>, parse it once (off for Debug and Android)
 if(NOT ANDROID AND (CMAKE_CONFIGURATION_TYPES OR NOT CMAKE_BUILD_TYPE MATCHES "Debug"))
   set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ON UNITY_BUILD_BATCH_SIZE 8)
-  target_precompile_headers(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/inc/aibo.h")
+  target_precompile_headers(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/inc/abpb.h")
 endif()
 
 # undecorated stdcall export alias, main library only: amxx has no such symbol
-if(WIN32 AND IS_ZIG AND NOT AIBO_64BIT AND NOT CPU_NON_X86)
-  target_link_options(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/ext/ldscripts/aibo-x86.def)
+if(WIN32 AND IS_ZIG AND NOT ABPB_64BIT AND NOT CPU_NON_X86)
+  target_link_options(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/ext/ldscripts/abpb-x86.def)
 endif()
 
 # windows resource with version info, main library only
@@ -176,30 +176,30 @@ if(WIN32 AND GIT_FOUND)
   if(IS_ZIG)
     # drive `zig rc` directly: the triple never leaves our control here
     add_custom_command(
-      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/aibo.res
+      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/abpb.res
       # pass -- so zig rc stops option parsing at the input file
-      COMMAND zig rc -DVERSION_GENERATED -I${PROJECT_BINARY_DIR} /fo${CMAKE_CURRENT_BINARY_DIR}/aibo.res -- ${PROJECT_SOURCE_DIR}/vc/aibo.rc
-      DEPENDS ${PROJECT_SOURCE_DIR}/vc/aibo.rc ${VERSION_H}
-      COMMENT "Compiling Windows resource vc/aibo.rc"
+      COMMAND zig rc -DVERSION_GENERATED -I${PROJECT_BINARY_DIR} /fo${CMAKE_CURRENT_BINARY_DIR}/abpb.res -- ${PROJECT_SOURCE_DIR}/vc/abpb.rc
+      DEPENDS ${PROJECT_SOURCE_DIR}/vc/abpb.rc ${VERSION_H}
+      COMMENT "Compiling Windows resource vc/abpb.rc"
       VERBATIM
     )
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/aibo.res)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/abpb.res)
     # ninja with zig drops .res from the link, pass it explicitly
-    target_link_options(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/aibo.res)
+    target_link_options(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/abpb.res)
   else()
-    target_sources(${PROJECT_NAME} PRIVATE "vc/aibo.rc")
+    target_sources(${PROJECT_NAME} PRIVATE "vc/abpb.rc")
   endif()
 endif()
 
 # subprojects are C and don't inherit per-target -m32, pin their bitness
-if(NOT AIBO_64BIT AND NOT IS_ZIG AND NOT ANDROID AND NOT _PROC STREQUAL "aarch64" AND NOT CPU_NON_X86)
+if(NOT ABPB_64BIT AND NOT IS_ZIG AND NOT ANDROID AND NOT _PROC STREQUAL "aarch64" AND NOT CPU_NON_X86)
   set(YSTL_32BIT ON)
 else()
   set(YSTL_32BIT OFF)
 endif()
 
 # without mbedtls https requests cleanly report HttpOnly
-if(AIBO_WITH_TLS AND NOT VITA AND NOT AIBO_WINXP AND NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+if(ABPB_WITH_TLS AND NOT VITA AND NOT ABPB_WINXP AND NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   if(POLICY CMP0218)
     cmake_policy(SET CMP0218 NEW)
   endif()
@@ -218,13 +218,13 @@ if(AIBO_WITH_TLS AND NOT VITA AND NOT AIBO_WINXP AND NOT CMAKE_SYSTEM_NAME STREQ
 endif()
 
 # no %n by design; winxp toolchain predates <stdbool.h>
-if(NOT AIBO_WINXP)
+if(NOT ABPB_WINXP)
   add_subdirectory(ext/ystl/ext/printf)
   target_link_libraries(${PROJECT_NAME} PRIVATE ystl_printf)
 endif()
 
 # amx mod x module (i386 linux/windows only), see ext/amxx
-if(AIBO_WITH_AMXX AND NOT AIBO_64BIT AND NOT CPU_NON_X86 AND NOT _PROC STREQUAL "aarch64" AND NOT ANDROID)
+if(ABPB_WITH_AMXX AND NOT ABPB_64BIT AND NOT CPU_NON_X86 AND NOT _PROC STREQUAL "aarch64" AND NOT ANDROID)
   add_subdirectory(ext/amxx)
 endif()
 
@@ -248,21 +248,21 @@ if(GIT_FOUND AND Python3_FOUND AND PROJECT_IS_TOP_LEVEL)
 endif()
 
 # test host (fake engine harness); native x64 only, ci presets never opt in
-if(AIBO_BUILD_TESTS AND NOT IS_ZIG AND AIBO_64BIT AND AIBO_NATIVE
+if(ABPB_BUILD_TESTS AND ABPB_64BIT AND ABPB_NATIVE
   AND EXISTS "${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt")
   enable_testing()
   add_subdirectory(tests)
 
-  aibo_configure_target(aibo_static STRICT DIST)
+  abpb_configure_target(abpb_static STRICT DIST)
   if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set_source_files_properties(src/copycat/copycat_core.cpp src/copycat/copycat_lite.cpp src/copycat/copycat_routes.cpp src/copycat/copycat_learning.cpp src/copycat/copycat_explore.cpp src/copycat/copycat_dialogue.cpp src/copycat/copycat_final.cpp src/copycat/copycat_aim.cpp
-      TARGET_DIRECTORY aibo_static PROPERTIES COMPILE_OPTIONS "-w")
+      TARGET_DIRECTORY abpb_static PROPERTIES COMPILE_OPTIONS "-w")
     set_source_files_properties(src/human_copycat.cpp src/human_explore.cpp src/human_final.cpp src/human_chat.cpp src/human_aim.cpp
-      TARGET_DIRECTORY aibo_static PROPERTIES COMPILE_OPTIONS "-Wno-effc++;-Wno-zero-as-null-pointer-constant")
+      TARGET_DIRECTORY abpb_static PROPERTIES COMPILE_OPTIONS "-Wno-effc++;-Wno-zero-as-null-pointer-constant")
   endif()
 
-  if(NOT AIBO_WINXP)
-    target_link_libraries(aibo_static PRIVATE ystl_printf)
+  if(NOT ABPB_WINXP)
+    target_link_libraries(abpb_static PRIVATE ystl_printf)
   endif()
 endif()
 

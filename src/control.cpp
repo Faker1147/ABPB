@@ -1,11 +1,11 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 namespace bot {
 
@@ -1673,7 +1673,7 @@ CommandResult Control::CmdDebugTranslate () {
   for (size_t i = 0; i < originals.size (); ++i) {
     Msg ("  %08x %s", hashes[i], originals[i].chars ());
   }
-  Msg ("Translate these strings into lang/%s_lang.cfg, then run 'aibo debug translate reset'.", language.chars ());
+  Msg ("Translate these strings into lang/%s_lang.cfg, then run 'abpb debug translate reset'.", language.chars ());
 
   return CommandResult::Handled;
 }

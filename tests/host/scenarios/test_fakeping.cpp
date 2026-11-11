@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/fakeping_calc.
+// ABPB test host: unit/fakeping_calc.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -8,7 +8,7 @@
 // update throttling and scoreboard emission.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -43,9 +43,9 @@ void BuildPingGraph () {
 }
 
 void BootPing (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "-modern/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "-modern/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_GAMEDIR "-modern/cstrike/dlls/" AIBO_TEST_CSSUFFIX, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs ("cstrike/dlls/" ABPB_TEST_CSSUFFIX, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

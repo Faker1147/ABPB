@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# AiBo, started from PODBot by Count Floyd
+# ABPB, started from PODBot by Count Floyd
 # Maintained by YaPB Team <yapb@jeefo.net>
 #
 # SPDX-License-Identifier: Unlicense
@@ -8,7 +8,7 @@
 # Builds markdown release notes from a commit range, grouped by area.
 # Used by CI for the rolling continuous build; also handy by hand:
 #
-#   python3 tools/gen_release_notes.py --range 4.4.957..HEAD --repo aibo/aibo
+#   python3 tools/gen_release_notes.py --range 4.4.957..HEAD --repo abpb/abpb
 #
 
 import argparse
@@ -77,7 +77,7 @@ def commit_group(sha):
 def main():
     parser = argparse.ArgumentParser(description='build markdown release notes from a commit range')
     parser.add_argument('--range', required=True, help='git revision range, e.g. 4.4.957..HEAD')
-    parser.add_argument('--repo', default=os.environ.get('GITHUB_REPOSITORY', 'aibo/aibo'),
+    parser.add_argument('--repo', default=os.environ.get('GITHUB_REPOSITORY', 'abpb/abpb'),
                         help='owner/name for commit links')
     parser.add_argument('--run-url', default=None, help='link to the CI run')
     parser.add_argument('--since', default=None, help='label of the range base for the header')
@@ -147,7 +147,7 @@ def main():
         lines.append('')
         lines.append('```sh')
         lines.append(f'gpg --import {key}.asc')
-        lines.append('gpg --verify some-aibo.zip.asc some-aibo.zip')
+        lines.append('gpg --verify some-abpb.zip.asc some-abpb.zip')
         lines.append('```')
 
     sys.stdout.write('\n'.join(lines).rstrip() + '\n')

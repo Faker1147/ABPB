@@ -1,0 +1,30 @@
+ABPB 4.3.3 快速安装（Windows / Counter-Strike 1.6）
+
+1. 关闭 CS 1.6 客户端或 HLDS 服务端。
+2. 把本目录的 addons 文件夹合并复制到游戏的 cstrike 目录：
+      cstrike/addons/ABPB/bin/ABPB.dll
+      cstrike/addons/ABPB/conf/ABPB.cfg
+3. 确认已安装 Metamod，并在 cstrike/addons/metamod/plugins.ini 加入：
+      win32 addons/ABPB/bin/ABPB.dll
+4. 启动服务器，控制台执行：
+      meta list
+      abpb version
+      abpb add
+5. 中文界面：编辑 cstrike/addons/ABPB/conf/ABPB.cfg，把
+      abpb_language "en"
+   改为
+      abpb_language "chs"
+   然后执行 exec addons/ABPB/conf/ABPB.cfg（或重启服务器）。
+
+说明：
+- ABPB 是 Metamod 插件，不是 gamedll，不要写进 liblist.gam。
+- 只支持 32 位 GoldSrc；与 YaPB/SYPB 的目录、DLL、命令、cvar 完全分离。
+- 常用命令：abpb version / abpb add / abpb fill / abpb list /
+  abpb removebots / abpb_human_status / abpb_human_aim_status /
+  abpb_learning_status / abpb_final_status
+- 常用 cvar：abpb_quota、abpb_language、abpb_human_copycat、
+  abpb_human_aim_level、abpb_learning、abpb_chat。
+- 32 槽服务器建议 abpb_quota 31，并让 YaPB/SYPB 不再补位。
+- AMXX 可选模块：把 addons/amxmodx/modules/abpb_amxx.dll 放好，
+  并在 modules.ini 加一行 abpb；脚本 include 使用 abpb.inc。
+- 详细安装、共存、命令和排错见 README-CN.md。

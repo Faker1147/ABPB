@@ -1,11 +1,11 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 namespace bot {
 
@@ -187,7 +187,7 @@ CreateResult Manager::Create (ystl::StringRef name, Difficulty difficulty, Perso
     else {
       if (cv_human_roster_lock) {
         // GoldSrc permits more than 28 bots. Overflow keeps a legend base name
-        // with a unique suffix instead of falling back to a AiBo default.
+        // with a unique suffix instead of falling back to a ABPB default.
         for (int suffix = 2; result_name.empty (); ++suffix) {
           for (const auto &legend : human_policy::LegendNames) {
             ystl::String candidate; candidate.assignf ("%s (%d)", legend, suffix);
@@ -307,7 +307,7 @@ void TickManager::Frame (Bot *bot) {
 void TickManager::OnBotRound (Bot *bot) {
   auto think_interval = kBotThinkInterval;
 
-  // allow to control bot tick rate via aibo_think_fps only if unlocked with custom.cfg
+  // allow to control bot tick rate via abpb_think_fps only if unlocked with custom.cfg
   if (conf.FetchCustom ("UnlockThinkFPS").starts_with ("yes")) {
     think_interval = 1.0f / ystl::clamp (cv_think_fps.As<float> (), 10.0f, 90.0f);
   }
@@ -901,7 +901,7 @@ void Manager::ServerFill (CSTeam team, Personality personality, Difficulty diffi
 }
 
 void Manager::KickEveryone (bool instant, bool zero_quota, bool silent) {
-  // this function drops all bot clients from server (this function removes only aibo's)
+  // this function drops all bot clients from server (this function removes only abpb's)
 
   if (!silent && cv_quota && HasBotsOnline ()) {
     ctrl.Msg ("Bots are removed from server.");
@@ -985,7 +985,7 @@ void Manager::KickBot (int index) {
 }
 
 bool Manager::KickRandom (bool dec_quota, Team from_team) {
-  // this function removes random bot from server (only aibo's)
+  // this function removes random bot from server (only abpb's)
 
   // if forteam is unassigned, that means random team
   bool dead_bot_found = false;

@@ -1,11 +1,11 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 // module interface implementation
 namespace bot {
@@ -44,7 +44,7 @@ public:
     return bots.GetBotCount () > 0;
   }
 
-  // checks whether specified players is a aibo bot
+  // checks whether specified players is a abpb bot
   virtual bool IsBot (int entity) override {
     return GetBot (entity) != nullptr;
   }

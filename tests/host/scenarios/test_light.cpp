@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/engine_light (LightMeasure).
+// ABPB test host: unit/engine_light (LightMeasure).
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -8,7 +8,7 @@
 // Legacy shortcut in getLightLevel must not trigger.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -18,10 +18,10 @@ namespace bot {
 
 TEST_CASE ("unit/engine_light [modern]") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "-modern/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "-modern/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_GAMEDIR "-modern/cstrike/dlls/" AIBO_TEST_CSSUFFIX, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs ("cstrike/dlls/" ABPB_TEST_CSSUFFIX, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

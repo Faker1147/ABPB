@@ -2,8 +2,16 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#if defined(_WIN32)
+#include <fcntl.h>
+#include <io.h>
+#endif
 using namespace rbcc;
 int main () {
+#if defined(_WIN32)
+  // stdout defaults to text mode on Windows; the harness expects raw records
+  _setmode (_fileno (stdout), _O_BINARY);
+#endif
   HumanAim a;
   SkillModel m;
   m.turnRate = std::clamp (m.turnRate, 60.f, 480.f);

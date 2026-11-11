@@ -1,4 +1,4 @@
-// Local online learning for AiBo Human Copycat. GPL-2.0-or-later.
+// Local online learning for ABPB Human Copycat. GPL-2.0-or-later.
 #include "copycat_learning.h"
 #include <algorithm>
 #include <cmath>

@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/analyze_{cleaner,finish}.
+// ABPB test host: unit/analyze_{cleaner,finish}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -11,7 +11,7 @@
 // extreme chances, never asserted on.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -164,9 +164,9 @@ void BuildAnaChain (int count, float spacing) {
 }
 
 void BootAnalyze (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

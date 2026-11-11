@@ -1,5 +1,5 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
@@ -134,7 +134,7 @@ struct PathLink {
 
 YSTL_LE_FIELDS (PathLink, velocity, distance, flags, index);
 
-// define graph path structure for aibo
+// define graph path structure for abpb
 struct Path {
   int32_t number {}, flags {};
   ystl::Vector origin {}, start {}, end {};
@@ -514,7 +514,7 @@ public:
   // check if debug output for given level is enabled (also respects silence)
   bool IsDebug (int level = 1) const;
 
-  // unified debug output: forwards to msg () only when aibo_debug >= level
+  // unified debug output: forwards to msg () only when abpb_debug >= level
   template <typename... Args> void Debug (const char *fmt, Args &&...args);
   template <typename... Args> void Debug (int level, const char *fmt, Args &&...args);
 

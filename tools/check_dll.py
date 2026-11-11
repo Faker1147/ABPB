@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 #
-# AiBo, started from PODBot by Count Floyd
+# ABPB, started from PODBot by Count Floyd
 # Maintained by YaPB Team <yapb@jeefo.net>
 #
 # SPDX-License-Identifier: Unlicense
 #
-# Verifies the binary contract of a built aibo Windows DLL (counterpart of
+# Verifies the binary contract of a built abpb Windows DLL (counterpart of
 # check_abi.py for the ELF/Linux side):
 #
 #   - PE machine matches the requested arch
@@ -14,11 +14,11 @@
 #     dynamic api-ms-win-crt-*/ucrtbase and the static-CRT kernel32/bcrypt
 #     paths are both accepted, debug CRT is not)
 #
-# Accepts a file or a directory (then checks every aibo*.dll except amxx).
+# Accepts a file or a directory (then checks every abpb*.dll except amxx).
 # Pure stdlib: parses PE directly, no pefile needed.
 #
 #   python3 tools/check_dll.py windows-x86 --arch i386
-#   python3 tools/check_dll.py windows-amd64/aibo_amd64.dll --arch amd64
+#   python3 tools/check_dll.py windows-amd64/abpb_amd64.dll --arch amd64
 #
 
 import argparse
@@ -49,7 +49,7 @@ REQUIRED_EXPORTS = frozenset({
     'Server_GetPhysicsInterface',
 })
 
-# system DLLs a aibo module may depend on. ucrtbase/vcruntime are the
+# system DLLs a abpb module may depend on. ucrtbase/vcruntime are the
 # dynamic UCRT, msvcrt is the downlevel CRT used by the winxp toolset, and
 # the api-ms-win-* api-sets forward to them. debug CRT (e.g. ucrtbased,
 # vcruntime140d) is deliberately absent, so it is flagged.
@@ -183,13 +183,13 @@ def check(path, arch):
 
 def collect(target):
     if os.path.isdir(target):
-        return sorted(p for p in glob.glob(os.path.join(target, 'aibo*.dll'))
+        return sorted(p for p in glob.glob(os.path.join(target, 'abpb*.dll'))
                       if 'amxx' not in os.path.basename(p).lower())
     return [target]
 
 
 def main():
-    parser = argparse.ArgumentParser(description='verify the aibo Windows DLL contract')
+    parser = argparse.ArgumentParser(description='verify the abpb Windows DLL contract')
     parser.add_argument('target', help='DLL file or directory to scan')
     parser.add_argument('--arch', default='i386', choices=sorted(MACHINES),
                         help='target architecture (default: i386)')
@@ -197,7 +197,7 @@ def main():
 
     libraries = collect(args.target)
     if not libraries:
-        print('%s: no aibo*.dll found' % args.target)
+        print('%s: no abpb*.dll found' % args.target)
         return 1
 
     failed = False

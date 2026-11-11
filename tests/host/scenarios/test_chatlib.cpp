@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/chatlib_{text,bot}.
+// ABPB test host: unit/chatlib_{text,bot}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -10,7 +10,7 @@
 // and single-reply factories, never asserted on.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -64,9 +64,9 @@ void BuildChatGraph () {
 }
 
 void BootChat (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

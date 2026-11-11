@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/navigate_{path,goals,move,gaps,cover,bomb} + scenario/navigate_walk.
+// ABPB test host: unit/navigate_{path,goals,move,gaps,cover,bomb} + scenario/navigate_walk.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -14,7 +14,7 @@
 
 #include <cstring>
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -580,10 +580,10 @@ ystl::UniquePtr<Bot> CreateNavBot (const char *name, const ystl::Vector &pos) {
 
 TEST_CASE ("unit/navigate_path") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -687,10 +687,10 @@ TEST_CASE ("unit/navigate_path") {
 
 TEST_CASE ("scenario/navigate_walk") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -801,14 +801,14 @@ TEST_CASE ("scenario/navigate_walk") {
 
 TEST_CASE ("unit/navigate_goals") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // demolition map for the planted-bomb branches below
   edict_t *bomb_target = engine.SpawnEntity ("func_bomb_target");
   HOST_REQUIRE (bomb_target != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -994,7 +994,7 @@ TEST_CASE ("unit/navigate_goals") {
 
 TEST_CASE ("unit/navigate_move") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // breakable + door seeds for the exemption branches below
   edict_t *seeded = engine.SpawnEntity ("func_breakable");
@@ -1013,7 +1013,7 @@ TEST_CASE ("unit/navigate_move") {
   HOST_REQUIRE (wall != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -1244,7 +1244,7 @@ TEST_CASE ("unit/navigate_move") {
 
 TEST_CASE ("unit/navigate_gaps") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // door seed for the HasDoors branches of the navigation frame
   edict_t *door = engine.SpawnEntity ("func_door");
@@ -1253,7 +1253,7 @@ TEST_CASE ("unit/navigate_gaps") {
   engine.Funcs ().pfnSetOrigin (door, door_pos);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -1663,10 +1663,10 @@ TEST_CASE ("unit/navigate_gaps") {
 
 TEST_CASE ("unit/navigate_avoid_commit") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -1783,10 +1783,10 @@ TEST_CASE ("unit/navigate_avoid_commit") {
 
 TEST_CASE ("unit/navigate_cover") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -1937,10 +1937,10 @@ TEST_CASE ("unit/navigate_cover") {
 
 TEST_CASE ("unit/navigate_ladder_strafe") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -1979,14 +1979,14 @@ TEST_CASE ("unit/navigate_ladder_strafe") {
 
 TEST_CASE ("unit/navigate_bomb") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // demolition map for the planted-bomb branches below
   edict_t *bomb_target = engine.SpawnEntity ("func_bomb_target");
   HOST_REQUIRE (bomb_target != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2120,14 +2120,14 @@ TEST_CASE ("unit/navigate_bomb") {
 
 TEST_CASE ("unit/navigate_sealed_bomb") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // demolition map, so the planted-bomb branches are live
   edict_t *bomb_target = engine.SpawnEntity ("func_bomb_target");
   HOST_REQUIRE (bomb_target != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2182,13 +2182,13 @@ TEST_CASE ("unit/navigate_sealed_bomb") {
 
 TEST_CASE ("unit/navigate_goal_variants") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   edict_t *bomb_target = engine.SpawnEntity ("func_bomb_target");
   HOST_REQUIRE (bomb_target != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2327,13 +2327,13 @@ TEST_CASE ("unit/navigate_goal_variants") {
 
 TEST_CASE ("unit/navigate_defend_cover") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   edict_t *bomb_target = engine.SpawnEntity ("func_bomb_target");
   HOST_REQUIRE (bomb_target != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2364,10 +2364,10 @@ TEST_CASE ("unit/navigate_defend_cover") {
 
 TEST_CASE ("unit/navigate_camp_aim") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2412,13 +2412,13 @@ TEST_CASE ("unit/navigate_camp_aim") {
 
 TEST_CASE ("unit/navigate_bulk") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   edict_t *door = engine.SpawnEntity ("func_door");
   HOST_REQUIRE (door != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2650,10 +2650,10 @@ TEST_CASE ("unit/navigate_bulk") {
 
 TEST_CASE ("unit/navigate_locomotion") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2707,10 +2707,10 @@ TEST_CASE ("unit/navigate_locomotion") {
 // crouch nodes duck; only an open camp/goal node stands
 TEST_CASE ("unit/navigate_crouch") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2814,10 +2814,10 @@ TEST_CASE ("unit/navigate_crouch") {
 
 TEST_CASE ("unit/navigate_nodes_extra") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2870,10 +2870,10 @@ TEST_CASE ("unit/navigate_nodes_extra") {
 // node as reached by equality, only real motion past it advances the walk
 TEST_CASE ("unit/navigate_jump_predict") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2926,10 +2926,10 @@ TEST_CASE ("unit/navigate_jump_predict") {
 // meets the lip, sufficient arcs and flat links keep the mapper velocity
 TEST_CASE ("unit/navigate_jump_retime") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -3067,7 +3067,7 @@ TEST_CASE ("unit/navigate_jump_retime") {
 
 TEST_CASE ("unit/navigate_tactics") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // multi-mode map: assassination + hostage + demolition + escape legs live together
   edict_t *bomb_target = engine.SpawnEntity ("func_bomb_target");
@@ -3080,7 +3080,7 @@ TEST_CASE ("unit/navigate_tactics") {
   HOST_REQUIRE (hostage_ent != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -3266,13 +3266,13 @@ TEST_CASE ("unit/navigate_tactics") {
 
 TEST_CASE ("unit/navigate_ordnance") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   edict_t *bomb_target = engine.SpawnEntity ("func_bomb_target");
   HOST_REQUIRE (bomb_target != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -3353,10 +3353,10 @@ TEST_CASE ("unit/navigate_ordnance") {
 
 TEST_CASE ("unit/navigate_avoid2") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -3497,7 +3497,7 @@ TEST_CASE ("unit/navigate_avoid2") {
 
 TEST_CASE ("unit/navigate_lift2") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   edict_t *door = engine.SpawnEntity ("func_door");
   HOST_REQUIRE (door != nullptr);
@@ -3505,7 +3505,7 @@ TEST_CASE ("unit/navigate_lift2") {
   engine.Funcs ().pfnSetOrigin (door, door_pos);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -3631,7 +3631,7 @@ TEST_CASE ("unit/navigate_lift2") {
 
 TEST_CASE ("unit/navigate_strafe") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   edict_t *wall = engine.SpawnEntity ("func_wall");
   HOST_REQUIRE (wall != nullptr);
@@ -3639,7 +3639,7 @@ TEST_CASE ("unit/navigate_strafe") {
   HOST_REQUIRE (door != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -3802,7 +3802,7 @@ TEST_CASE ("unit/navigate_strafe") {
 
 TEST_CASE ("unit/navigate_routing") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   edict_t *hostage_ent = engine.SpawnEntity ("hostage_entity");
   HOST_REQUIRE (hostage_ent != nullptr);
@@ -3810,7 +3810,7 @@ TEST_CASE ("unit/navigate_routing") {
   HOST_REQUIRE (door != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -3993,7 +3993,7 @@ TEST_CASE ("unit/navigate_routing") {
 
 TEST_CASE ("unit/navigate_frame") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   edict_t *door = engine.SpawnEntity ("func_door");
   HOST_REQUIRE (door != nullptr);
@@ -4001,7 +4001,7 @@ TEST_CASE ("unit/navigate_frame") {
   engine.Funcs ().pfnSetOrigin (door, door_pos);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -4146,14 +4146,14 @@ TEST_CASE ("unit/navigate_frame") {
 
 TEST_CASE ("unit/navigate_siege") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // escape-only map: the escape legs of the goal selection live here
   edict_t *escape_zone = engine.SpawnEntity ("func_escapezone");
   HOST_REQUIRE (escape_zone != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -4274,14 +4274,14 @@ TEST_CASE ("unit/navigate_siege") {
 
 TEST_CASE ("unit/navigate_herald") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // demolition map for the planted-bomb branches below
   edict_t *bomb_target = engine.SpawnEntity ("func_bomb_target");
   HOST_REQUIRE (bomb_target != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -4440,10 +4440,10 @@ TEST_CASE ("unit/navigate_herald") {
 
 TEST_CASE ("unit/navigate_bastion") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -4740,7 +4740,7 @@ TEST_CASE ("unit/navigate_bastion") {
 
 TEST_CASE ("unit/navigate_pinnacle") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // door seed for the HasDoors legs of the navigation frame
   edict_t *door = engine.SpawnEntity ("func_door");
@@ -4749,7 +4749,7 @@ TEST_CASE ("unit/navigate_pinnacle") {
   engine.Funcs ().pfnSetOrigin (door, door_pos);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -5174,7 +5174,7 @@ TEST_CASE ("unit/navigate_pinnacle") {
 
 TEST_CASE ("unit/navigate_harbor") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // door seed for the HasDoors legs, the lift slab and its panel below
   edict_t *door = engine.SpawnEntity ("func_door");
@@ -5194,7 +5194,7 @@ TEST_CASE ("unit/navigate_harbor") {
   engine.Funcs ().pfnSetOrigin (panel, panel_pos);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -5544,14 +5544,14 @@ TEST_CASE ("unit/navigate_harbor") {
 
 TEST_CASE ("unit/navigate_vanguard") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // hostage map for the rescue and no-hostage legs below
   edict_t *hostage_seed = engine.SpawnEntity ("hostage_entity");
   HOST_REQUIRE (hostage_seed != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -6134,7 +6134,7 @@ TEST_CASE ("unit/navigate_vanguard") {
 
 TEST_CASE ("unit/navigate_summit") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // hostage map plus doors for the alternative and exemption legs
   edict_t *hostage_seed = engine.SpawnEntity ("hostage_entity");
@@ -6143,7 +6143,7 @@ TEST_CASE ("unit/navigate_summit") {
   HOST_REQUIRE (door != nullptr);
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -6782,10 +6782,10 @@ TEST_CASE ("unit/navigate_summit") {
 
 TEST_CASE ("unit/navigate_relay") {
   testhost::FakeEngine engine;
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   testhost::FakeCSApi cs {};
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

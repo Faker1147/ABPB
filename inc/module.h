@@ -1,5 +1,5 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
@@ -36,7 +36,7 @@ public:
   // checks if bots are currently in game
   virtual bool IsBotsInGame () = 0;
 
-  // checks whether specified players is a aibo bot
+  // checks whether specified players is a abpb bot
   virtual bool IsBot (int entity) = 0;
 
   // gets the node nearest to origin

@@ -1,8 +1,8 @@
-// AiBo 4.3.3 installer engine. GPL-2.0-or-later.
+// ABPB 4.3.3 installer engine. GPL-2.0-or-later.
 #pragma once
 #include <filesystem>
 #include <string>
-namespace aibo_setup {
+namespace abpb_setup {
 struct Result {
   std::filesystem::path game, backup;
   unsigned files {}, preserved {}, migrated {};

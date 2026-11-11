@@ -1,5 +1,5 @@
 //
-// AiBo test host: gamedll detection matrix.
+// ABPB test host: gamedll detection matrix.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -18,7 +18,7 @@
 #include "fake_engine.h"
 #include "test_host.h"
 
-// dllapi baseline is filled by aibo's GetEntityAPI (see goldsrc.h externs)
+// dllapi baseline is filled by abpb's GetEntityAPI (see goldsrc.h externs)
 extern gamefuncs_t dllapi;
 
 namespace bot {
@@ -100,7 +100,7 @@ TEST_CASE ("gamedll/matrix_legacy") {
     false,
     false,
   };
-  RunMatrixVariant (AIBO_TEST_GAMEDIR "/cstrike", AIBO_TEST_GAMEDIR "/cstrike/dlls/" AIBO_TEST_CSSUFFIX, expect);
+  RunMatrixVariant (ABPB_TEST_GAMEDIR "/cstrike", "cstrike/dlls/" ABPB_TEST_CSSUFFIX, expect);
 }
 
 TEST_CASE ("gamedll/matrix_modern [modern]") {
@@ -113,7 +113,7 @@ TEST_CASE ("gamedll/matrix_modern [modern]") {
     true,
     true,
   };
-  RunMatrixVariant (AIBO_TEST_GAMEDIR "-modern/cstrike", AIBO_TEST_GAMEDIR "-modern/cstrike/dlls/" AIBO_TEST_CSSUFFIX, expect);
+  RunMatrixVariant (ABPB_TEST_GAMEDIR "-modern/cstrike", "cstrike/dlls/" ABPB_TEST_CSSUFFIX, expect);
 }
 
 TEST_CASE ("gamedll/matrix_regame [regame]") {
@@ -126,7 +126,7 @@ TEST_CASE ("gamedll/matrix_regame [regame]") {
     true,
     true,
   };
-  RunMatrixVariant (AIBO_TEST_GAMEDIR "-regame/cstrike", AIBO_TEST_GAMEDIR "-regame/cstrike/dlls/" AIBO_TEST_CSSUFFIX, expect);
+  RunMatrixVariant (ABPB_TEST_GAMEDIR "-regame/cstrike", "cstrike/dlls/" ABPB_TEST_CSSUFFIX, expect);
 }
 
 } // namespace bot

@@ -1,4 +1,4 @@
-// Local online learning for AiBo Human Copycat. GPL-2.0-or-later.
+// Local online learning for ABPB Human Copycat. GPL-2.0-or-later.
 #pragma once
 #include "copycat_core.h"
 #include <array>

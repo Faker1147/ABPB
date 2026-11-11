@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/manager_{create,kicks,teams,maintain,leaders_as,leaders_de}.
+// ABPB test host: unit/manager_{create,kicks,teams,maintain,leaders_as,leaders_de}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -13,7 +13,7 @@
 // harness, so it can never auto-add either).
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -117,9 +117,9 @@ edict_t *CreateHuman (ystl::StringRef name) {
 }
 
 void BootManagerMap (testhost::FakeEngine &engine, testhost::FakeCSApi &cs, const char *map_entity) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -147,9 +147,9 @@ void BootManagerMap (testhost::FakeEngine &engine, testhost::FakeCSApi &cs, cons
 }
 
 void BootManager (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

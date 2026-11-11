@@ -1,10 +1,10 @@
 //
-// AiBo test host: fake cs gamedll observation API.
+// ABPB test host: fake cs gamedll observation API.
 //
 // SPDX-License-Identifier: Unlicense
 //
 // Implemented by fake_cs/fake_cs.cpp, consumed by the host through the
-// platform loader (aibo loads the fake gamedll with local visibility, so
+// platform loader (abpb loads the fake gamedll with local visibility, so
 // plain linking against it is impossible by design).
 //
 

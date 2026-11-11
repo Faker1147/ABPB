@@ -116,9 +116,9 @@ tasks:
         script:
           - |
             set -e
-            dll=$(find "build/ci-$ARCH" -maxdepth 1 -type f -name 'aibo*.dll' ! -name '*amxx*' | head -1)
+            dll=$(find "build/ci-$ARCH" -maxdepth 1 -type f -name 'abpb*.dll' ! -name '*amxx*' | head -1)
             if [ -z "$dll" ]; then
-              echo "No AIBO DLL found in build/ci-$ARCH"
+              echo "No ABPB DLL found in build/ci-$ARCH"
               exit 1
             fi
             arch=i386
@@ -132,9 +132,9 @@ tasks:
         script:
           - |
             set -e
-            so=$(find "build/ci-$ARCH" -maxdepth 1 -type f -name 'aibo*.so' ! -name '*amxx*' | head -1)
+            so=$(find "build/ci-$ARCH" -maxdepth 1 -type f -name 'abpb*.so' ! -name '*amxx*' | head -1)
             if [ -z "$so" ]; then
-              echo "No AIBO shared library found in build/ci-$ARCH"
+              echo "No ABPB shared library found in build/ci-$ARCH"
               exit 1
             fi
             echo "Checking ABI: $so (i386, max glibc 2.17)"
@@ -144,9 +144,9 @@ tasks:
         script:
           - |
             set -e
-            so=$(find "build/ci-$ARCH" -maxdepth 1 -type f -name 'aibo*.so' ! -name '*amxx*' | head -1)
+            so=$(find "build/ci-$ARCH" -maxdepth 1 -type f -name 'abpb*.so' ! -name '*amxx*' | head -1)
             if [ -z "$so" ]; then
-              echo "No AIBO shared library found in build/ci-$ARCH"
+              echo "No ABPB shared library found in build/ci-$ARCH"
               exit 1
             fi
             case "$ARCH" in
@@ -162,17 +162,17 @@ tasks:
             set -e
             mkdir -p artifacts
             find "build/ci-$ARCH" -maxdepth 1 -type f \
-              \( -name 'aibo*.so' -o -name 'aibo*.dll' -o -name 'aibo*.dylib' \) \
+              \( -name 'abpb*.so' -o -name 'abpb*.dll' -o -name 'abpb*.dylib' \) \
               -exec cp {} artifacts/ \;
             if ! find artifacts -type f -print -quit | grep -q .; then
               echo "No build artifacts found"
               exit 1
             fi
-            tar -czf aibo-artifacts.tar.gz -C artifacts .
-            ls -la aibo-artifacts.tar.gz
+            tar -czf abpb-artifacts.tar.gz -C artifacts .
+            ls -la abpb-artifacts.tar.gz
         artifacts:
           paths:
-            - aibo-artifacts.tar.gz
+            - abpb-artifacts.tar.gz
 
   - name: unit-tests
     cubes:
@@ -263,7 +263,7 @@ tasks:
               cmake --preset "ci-$a"
               cmake --build --preset "ci-$a"
               mkdir -p "artifacts/$a"
-              find "build/ci-$a" -maxdepth 1 -type f \( -name 'aibo*.so' -o -name 'aibo*.dll' -o -name 'aibo*.dylib' \) -exec cp {} "artifacts/$a/" \;
+              find "build/ci-$a" -maxdepth 1 -type f \( -name 'abpb*.so' -o -name 'abpb*.dll' -o -name 'abpb*.dylib' \) -exec cp {} "artifacts/$a/" \;
             done
       - name: dependencies
         script:
@@ -285,11 +285,11 @@ tasks:
             set -e
             cmake --preset dist
             cmake --build --preset dist --target package
-            tar -czf aibo-pkg.tar.gz -C pkg .
-            ls -la aibo-pkg.tar.gz
+            tar -czf abpb-pkg.tar.gz -C pkg .
+            ls -la abpb-pkg.tar.gz
         artifacts:
           paths:
-            - aibo-pkg.tar.gz
+            - abpb-pkg.tar.gz
       - name: publish
         script:
           - |

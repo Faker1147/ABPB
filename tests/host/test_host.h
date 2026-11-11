@@ -1,9 +1,9 @@
 //
-// AiBo test host: shared scenario helpers.
+// ABPB test host: shared scenario helpers.
 //
 // SPDX-License-Identifier: Unlicense
 //
-// FakeCS resolution via the platform loader (aibo loads the fake gamedll
+// FakeCS resolution via the platform loader (abpb loads the fake gamedll
 // with local visibility, so plain linking against it is impossible by design).
 // ystl only, no std::*.
 //
@@ -15,7 +15,7 @@
 #include <ystl/ystl.h>
 #include <linkage/goldsrc.h>
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -28,7 +28,7 @@
   #undef far
 #endif
 
-// aibo entry points (linked from aibo_static, extern "C" via YSTL_EXPORT)
+// abpb entry points (linked from abpb_static, extern "C" via YSTL_EXPORT)
 namespace bot {
 
 extern "C" {
@@ -50,12 +50,12 @@ using ModuleHandle = HMODULE;
 using ModuleHandle = void *;
 #endif
 
-// portable dynamic loading: tests only (aibo itself goes through ystl)
+// portable dynamic loading: tests only (abpb itself goes through ystl)
 inline ModuleHandle ModuleOpen (const char *path) {
 #if defined(YSTL_WINDOWS)
   return LoadLibraryA (path);
 #else
-  // RTLD_GLOBAL: the same image is preloaded for aibo's own load, and
+  // RTLD_GLOBAL: the same image is preloaded for abpb's own load, and
   // symbols must stay visible to the process later on
   return dlopen (path, RTLD_NOW | RTLD_GLOBAL);
 #endif

@@ -1,5 +1,5 @@
-// AiBo Human Copycat 4.3.3 FINAL. GPL-2.0-or-later.
-// RealBot supplies the bounded RBCC library; AiBo retains navigation/tactics.
+// ABPB Human Copycat 4.3.3 FINAL. GPL-2.0-or-later.
+// RealBot supplies the bounded RBCC library; ABPB retains navigation/tactics.
 #include "copycat/copycat_core.h"
 #include "copycat/copycat_routes.h"
 #include "copycat/copycat_learning.h"
@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <filesystem>
 #include <string>
-#include <aibo.h>
+#include <abpb.h>
 
 namespace bot {
 namespace {
@@ -201,7 +201,7 @@ void ResetActors () {
 void LoadEnvironment () {
   environment = Fingerprint ();
   char suffix[32]; std::snprintf (suffix, sizeof suffix, "-%08x.rbcc", environment);
-  data_path = std::string (game.GetRunningModName ()) + "/addons/AiBo/data/copycat/" + map_name + suffix;
+  data_path = std::string (game.GetRunningModName ()) + "/addons/ABPB/data/copycat/" + map_name + suffix;
   database.clear (); dirty = false;
   std::string error;
   if (!database.load (data_path, map_name, environment, error)) {
@@ -534,17 +534,17 @@ void HumanCopycat::LevelStart () {
   std::fill (std::begin (last_native_node),std::end (last_native_node),-1);
   NewRound ();
   if (!commands_registered) {
-    game.RegisterEngineCommand ("aibo_human_status", &HumanCopycat::Status);
-    game.RegisterEngineCommand ("aibo_human_save", &HumanCopycat::Save);
-    game.RegisterEngineCommand ("aibo_human_reload", &HumanCopycat::Reload);
-    game.RegisterEngineCommand ("aibo_learning_status", &HumanCopycat::LearningStatus);
-    game.RegisterEngineCommand ("aibo_explore_status", &HumanExplore::Status);
-    game.RegisterEngineCommand ("aibo_chat_status", &HumanChat::Status);
-    game.RegisterEngineCommand ("aibo_final_status", &HumanArena::Status);
-    game.RegisterEngineCommand ("aibo_human_aim_status", &HumanAimCoach::Status);
+    game.RegisterEngineCommand ("abpb_human_status", &HumanCopycat::Status);
+    game.RegisterEngineCommand ("abpb_human_save", &HumanCopycat::Save);
+    game.RegisterEngineCommand ("abpb_human_reload", &HumanCopycat::Reload);
+    game.RegisterEngineCommand ("abpb_learning_status", &HumanCopycat::LearningStatus);
+    game.RegisterEngineCommand ("abpb_explore_status", &HumanExplore::Status);
+    game.RegisterEngineCommand ("abpb_chat_status", &HumanChat::Status);
+    game.RegisterEngineCommand ("abpb_final_status", &HumanArena::Status);
+    game.RegisterEngineCommand ("abpb_human_aim_status", &HumanAimCoach::Status);
     commands_registered = true;
   }
-  game.Print ("[Human Copycat 4.3.3 FINAL] AiBo navigation/tactics + final human input controller. clips=%u", static_cast<unsigned> (database.size ()));
+  game.Print ("[Human Copycat 4.3.3 FINAL] ABPB navigation/tactics + final human input controller. clips=%u", static_cast<unsigned> (database.size ()));
 }
 void HumanCopycat::LevelStop () {
   for (auto &l : learners) CommitLearning (l, 0, true);
@@ -849,7 +849,7 @@ void HumanCopycat::Finalize (Bot &bot, HumanCommand &cmd) {
   const bool blocked = !bot.blind_timer_.elapsed () || e->v.maxspeed < 10.0f || game_state.IsRoundOver () || !bot.IsMoveAllowed () || cv_freeze_bots.As<bool> () || s.blind_until > game.Time ();
   auto current = Snapshot (e, false);
   current.weapon = static_cast<uint8_t> (bot.current_weapon_);
-  // Target selection remains AiBo's; its visibility is confirmed on every command.
+  // Target selection remains ABPB's; its visibility is confirmed on every command.
   if (!game.IsNullEntity (bot.enemy_)) current.context = ContextFor (e, bot.enemy_,true,
     HumanAimCoach::Enabled () && (HumanAimCoach::Level (bot)>0 || cv_human_aim_level.As<float> ()>0) ? 8192.0f : 2048.0f);
   const bool visible = current.context.visible != 0;

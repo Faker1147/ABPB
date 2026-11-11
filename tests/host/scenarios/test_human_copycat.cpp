@@ -1,6 +1,6 @@
 // GPL-2.0-or-later. Synthetic integration tests, not a CS1.6 match benchmark.
 #include "../../../src/copycat/copycat_core.h"
-#include <aibo.h>
+#include <abpb.h>
 #include <ystl/test.h>
 #include "fake_engine.h"
 #include "test_host.h"
@@ -86,9 +86,9 @@ struct Fixture {
   gamefuncs_t table {};
   Bot *bot {};
   bool Start (const char *map, bool bomb_map = false, int slots = 16) {
-    engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike",slots);
+    engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike",slots);
     engine.Globals ().mapname = string_t (engine.AllocString (map));
-    if (!testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs)) return false;
+    if (!testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs)) return false;
     cs.reset (); GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
     if (!GetEntityAPI (&table, 140)) return false;
     game.Precache (); if (bomb_map) engine.SpawnEntity ("func_bomb_target");
@@ -560,7 +560,7 @@ TEST_CASE ("human427/locked_roster_and_last_free_name") {
   Fixture f; HOST_REQUIRE (f.Start ("de_hc427_names"));
   const auto path = ystl::strings.join_path (bstor.GetRunningPathVfs (), folders.config, "names.cfg");
   ystl::File::make_path (ystl::String (path.substr (0, path.find_last_of (kPathSeparator))).chars ());
-  { ystl::File file (path, "wb"); HOST_REQUIRE (!!file); file.puts ("raw Names {\n  OldAiBoDefault\n}\n"); }
+  { ystl::File file (path, "wb"); HOST_REQUIRE (!!file); file.puts ("raw Names {\n  OldABPBDefault\n}\n"); }
   cv_human_roster_lock.Set (1); conf.LoadNamesConfig ();
   ystl::Array<ystl::String> names;
   ystl::rg.force_int (0); // repeatedly start at the same occupied slot
@@ -574,7 +574,7 @@ TEST_CASE ("human427/locked_roster_and_last_free_name") {
   }
   CHECK (conf.PickBotName () == nullptr); ystl::rg.clear_forced ();
   conf.LoadNamesConfig (); cv_name_prefix.Set ("[POD]");
-  bots.Addbot ("SavedAiBoDefault", Difficulty::Expert, Personality::Normal, Team::Terrorist, Skin::Terror, true);
+  bots.Addbot ("SavedABPBDefault", Difficulty::Expert, Personality::Normal, Team::Terrorist, Skin::Terror, true);
   HOST_REQUIRE (testhost::PumpBots (f.engine, 2));
   for (auto &created : bots) {
     if (&created == f.bot) continue;
@@ -1392,16 +1392,17 @@ TEST_CASE ("aim431/objective_smoke_is_bought_with_real_budget") {
 
 namespace bot {
 TEST_CASE ("release432/runtime_identity_and_namespaces") {
-  Fixture f; HOST_REQUIRE (f.Start ("de_aibo432_identity"));
-  CHECK (product.name == "AiBo" && product.version == "4.3.3");
-  CHECK (product.name_lower == "AiBo" && product.cmd_pri == "aibo" && product.cmd_sec == "ab");
-  CHECK (std::string (::Plugin_info.name) == "AiBo" && std::string (::Plugin_info.version) == "4.3.3");
-  CHECK (std::string (cv_human_aim_level.ptr->name) == "aibo_human_aim_level");
-  CHECK (std::string (cv_quota.ptr->name) == "aibo_quota");
-  CHECK (bstor.GetRunningPath ().find ("addons/AiBo") != ystl::String::InvalidIndex);
+  Fixture f; HOST_REQUIRE (f.Start ("de_abpb432_identity"));
+  CHECK (product.name == "ABPB" && product.version == "4.3.3");
+  CHECK (product.name_lower == "ABPB" && product.cmd_pri == "abpb" && product.cmd_sec == "abp");
+  CHECK (std::string (::Plugin_info.name) == "ABPB" && std::string (::Plugin_info.version) == "4.3.3");
+  CHECK (std::string (cv_human_aim_level.ptr->name) == "abpb_human_aim_level");
+  CHECK (std::string (cv_quota.ptr->name) == "abpb_quota");
+  CHECK (bstor.GetRunningPath ().find ("addons/ABPB") != ystl::String::InvalidIndex ||
+         bstor.GetRunningPath ().find ("addons\\ABPB") != ystl::String::InvalidIndex);
 }
 TEST_CASE ("release432/maximum_profile_stays_at_peak") {
-  Fixture f; HOST_REQUIRE (f.Start ("de_aibo432_peak")); auto human = f.Foe (); EnableAim431 (f,100);
+  Fixture f; HOST_REQUIRE (f.Start ("de_abpb432_peak")); auto human = f.Foe (); EnableAim431 (f,100);
   auto cmd = MakeCommand (IN_ATTACK); HumanCopycatHook::Enemy (*f.bot,human);
   HumanCopycat::Finalize (*f.bot,cmd); CHECK (HumanAimCoach::Level (*f.bot) == Approx (1.0f));
   for (int i = 0; i < 10; ++i) { f.engine.AdvanceTime (1.0f); HumanAimCoach::Update (*f.bot,human); }
@@ -1426,7 +1427,7 @@ void Enable433 (Fixture &f) {
 }
 bool Dust2Graph433 () {
   const auto root=std::filesystem::path (__FILE__).parent_path ().parent_path ().parent_path ().parent_path ();
-  std::ifstream file (root/"cfg/addons/AiBo/data/graph/de_dust2.graph",std::ios::binary);
+  std::ifstream file (root/"cfg/addons/ABPB/data/graph/de_dust2.graph",std::ios::binary);
   StorageHeader h {}; file.read (reinterpret_cast<char *> (&h),sizeof h);
   if (!file || h.length!=1238 || h.uncompressed!=h.length*static_cast<int> (sizeof (Path)) || h.compressed<1) return false;
   std::vector<uint8_t> compressed (static_cast<size_t> (h.compressed)+16), raw (static_cast<size_t> (h.uncompressed)+16);

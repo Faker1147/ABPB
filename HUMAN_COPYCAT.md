@@ -2,7 +2,7 @@
 
 AiBo menggabungkan navigasi/taktik native, input aim yang dibatasi, pembelajaran
 lokal dan percakapan prosedural. Tidak memerlukan layanan AI, Python saat bermain,
-model unduhan atau koneksi internet. Asal kode dan lisensi ada di NOTICE-AiBo.md.
+model unduhan atau koneksi internet. Asal kode dan lisensi ada di NOTICE-ABPB.md.
 
 ## Perilaku aktif
 

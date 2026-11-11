@@ -1,5 +1,5 @@
 //
-// AiBo test host: fake GoldSource engine (foolsgoldsource-inspired).
+// ABPB test host: fake GoldSource engine (foolsgoldsource-inspired).
 //
 // SPDX-License-Identifier: Unlicense
 //

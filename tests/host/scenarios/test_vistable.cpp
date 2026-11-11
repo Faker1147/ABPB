@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/vistable_{build,serial}.
+// ABPB test host: unit/vistable_{build,serial}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -9,7 +9,7 @@
 // and disk round-trip with stale-layout rejection.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -60,9 +60,9 @@ void BuildVisGraph (int count) {
 }
 
 void BootVis (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

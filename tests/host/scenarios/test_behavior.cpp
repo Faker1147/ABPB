@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/behavior_{queue,senses,damage,map,frame,logic}.
+// ABPB test host: unit/behavior_{queue,senses,damage,map,frame,logic}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -9,7 +9,7 @@
 // pinned via exact modes and single-candidate setups, never asserted on.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -442,9 +442,9 @@ void BuildBehaviorGraph () {
 }
 
 void BootBehavior (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -773,9 +773,9 @@ TEST_CASE ("unit/behavior_map") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -1302,8 +1302,8 @@ TEST_CASE ("unit/behavior_c4_approach") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   // demolition flag needs the target present before activate
@@ -1541,8 +1541,8 @@ TEST_CASE ("unit/behavior_siege") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   // demolition + rescue flags need their entities before activate
@@ -2685,7 +2685,7 @@ TEST_CASE ("unit/behavior_breakables") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // escape flag + breakables need their entities before activate
   // (pre-activate spawns seed the validity map, so the interest
@@ -2714,7 +2714,7 @@ TEST_CASE ("unit/behavior_breakables") {
   edict_t *near_close = make_brk (170.0f);
   HOST_REQUIRE (brk != nullptr && far_brk != nullptr && near_ign != nullptr && near_close != nullptr);
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -2914,7 +2914,7 @@ TEST_CASE ("unit/behavior_teleport") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
   // demolition + rescue flags need their entities before activate
   edict_t *target = engine.SpawnEntity ("func_bomb_target");
@@ -2925,7 +2925,7 @@ TEST_CASE ("unit/behavior_teleport") {
   telhos->v.health = 100.0f;
   telhos->v.origin = ystl::Vector (500.0f, 0.0f, 0.0f);
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

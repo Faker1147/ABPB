@@ -1,11 +1,11 @@
 //
-// AiBo, started from PODBot by Count Floyd
+// ABPB, started from PODBot by Count Floyd
 // Maintained by YaPB Team <yapb@jeefo.net>
 //
 // SPDX-License-Identifier: Unlicense
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 namespace bot {
 
@@ -1423,7 +1423,7 @@ void Bot::ResetMovement () {
 }
 
 void Bot::TranslateInput () {
-  // no shooting allowed, if aibo_dont_shoot is enabled
+  // no shooting allowed, if abpb_dont_shoot is enabled
   if (cv_dont_shoot) {
     pev->button &= ~IN_ATTACK;
   }

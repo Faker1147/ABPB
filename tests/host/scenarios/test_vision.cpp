@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/vision_{angles,sees,aim,nav}.
+// ABPB test host: unit/vision_{angles,sees,aim,nav}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -9,7 +9,7 @@
 // is pinned via exact modes and throttled timers, never asserted on.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -135,9 +135,9 @@ void BuildVisionGraph () {
 }
 
 void BootVision (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());

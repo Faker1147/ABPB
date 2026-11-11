@@ -1,5 +1,5 @@
 //
-// AiBo test host: unit/tasks_{core,basic,duty,throw,break,drills}.
+// ABPB test host: unit/tasks_{core,basic,duty,throw,break,drills}.
 //
 // SPDX-License-Identifier: Unlicense
 //
@@ -10,7 +10,7 @@
 // single-candidate setups, never asserted on.
 //
 
-#include <aibo.h>
+#include <abpb.h>
 
 #include <ystl/test.h>
 #include "fake_engine.h"
@@ -247,9 +247,9 @@ void BuildTasksGraph () {
 }
 
 void BootTasks (testhost::FakeEngine &engine, testhost::FakeCSApi &cs) {
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -446,9 +446,9 @@ TEST_CASE ("unit/tasks_duty") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -635,9 +635,9 @@ TEST_CASE ("unit/tasks_break") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -882,9 +882,9 @@ TEST_CASE ("unit/tasks_defuse_cleanup") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
 
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
 
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
@@ -1544,8 +1544,8 @@ TEST_CASE ("unit/tasks_vault") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
   HOST_REQUIRE (cs.entered () != 0);
@@ -1850,8 +1850,8 @@ TEST_CASE ("unit/tasks_frost") {
   testhost::FakeEngine engine;
   testhost::FakeCSApi cs {};
 
-  engine.Initialise (AIBO_TEST_GAMEDIR "/cstrike");
-  HOST_REQUIRE (testhost::ResolveFakeCs (AIBO_TEST_CSDLL, cs));
+  engine.Initialise (ABPB_TEST_GAMEDIR "/cstrike");
+  HOST_REQUIRE (testhost::ResolveFakeCs (ABPB_TEST_CSDLL, cs));
   cs.reset ();
   GiveFnptrsToDll (&engine.Funcs (), &engine.Globals ());
   HOST_REQUIRE (cs.entered () != 0);

@@ -1,9 +1,9 @@
 //
-// AiBo test host: fake cs gamedll (second mock).
+// ABPB test host: fake cs gamedll (second mock).
 //
 // SPDX-License-Identifier: Unlicense
 //
-// Baseline gamefuncs_t that aibo intercepts via GetEntityAPI. Every entry
+// Baseline gamefuncs_t that abpb intercepts via GetEntityAPI. Every entry
 // logs its invocation so tests can assert forwarding was not broken.
 // Build-time toggles emulate gamedll variants:
 //   -DFAKECS_MODERN=1  -> exports weapon_famas (modern cs + bot voice)

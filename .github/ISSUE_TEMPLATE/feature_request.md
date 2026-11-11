@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an improvement to AiBo
+about: Suggest an improvement to ABPB
 title: ''
 labels: enhancement
 assignees: ''

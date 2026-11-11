@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-#
 
 #
-# AiBo, based on PODBot by Count Floyd
+# ABPB, based on PODBot by Count Floyd
 # Maintained by YaPB Team <yapb@jeefo.net>
 #
 # SPDX-License-Identifier: Unlicense
@@ -96,7 +96,7 @@ class BotGpgSign(object):
       if 'GPG_PRIVATE_KEY' not in os.environ:
          return
 
-      self.home = tempfile.mkdtemp(prefix='aibo-gpg-')
+      self.home = tempfile.mkdtemp(prefix='abpb-gpg-')
       env = dict(os.environ, GNUPGHOME=self.home)
 
       import_result = subprocess.run(
@@ -170,7 +170,7 @@ class BotRelease(object):
       if len(sys.argv) < 2:
          raise Exception('Missing required parameters.')
 
-      self.project = 'aibo'
+      self.project = 'abpb'
       self.version = sys.argv[1]
       self.artifacts = 'artifacts'
       self.graphs = 'https://raw.githubusercontent.com/yapb/graph/master'
@@ -200,7 +200,7 @@ class BotRelease(object):
       self.bot_dir = os.path.join(self.work_dir, 'addons', self.project)
       self.pkg_dir = os.path.join(path, 'pkg')
 
-      self.cs = BotSign('AiBo', 'https://yapb.jeefo.net/')
+      self.cs = BotSign('ABPB', 'https://yapb.jeefo.net/')
 
       if self.cs.has():
          print('Signing enabled')
@@ -218,9 +218,9 @@ class BotRelease(object):
       self.http_pull(self.win32exe, 'botsetup.exe')
 
       self.pkg_matrix = [
-         BotPackage('windows', 'zip', {'windows-x86': 'dll'}, amxx={'windows-x86': 'aibo_amxx.dll'}),
-         BotPackage('windows', 'exe', {'windows-x86': 'dll'}, amxx={'windows-x86': 'aibo_amxx.dll'}),
-         BotPackage('linux', 'tar.xz', {'linux-x86': 'so'}, amxx={'linux-x86': 'aibo_amxx_i386.so'}),
+         BotPackage('windows', 'zip', {'windows-x86': 'dll'}, amxx={'windows-x86': 'abpb_amxx.dll'}),
+         BotPackage('windows', 'exe', {'windows-x86': 'dll'}, amxx={'windows-x86': 'abpb_amxx.dll'}),
+         BotPackage('linux', 'tar.xz', {'linux-x86': 'so'}, amxx={'linux-x86': 'abpb_amxx_i386.so'}),
          BotPackage('extras', 'zip',
                     {'linux-arm64': 'so',
                      'linux-amd64': 'so',
@@ -240,7 +240,7 @@ class BotRelease(object):
          os.makedirs(os.path.join(self.bot_dir, 'data', dir), exist_ok=True)
 
    def http_pull(self, url: str, tp: str):
-      with requests.get(url, headers={'User-Agent': 'AiBo/4'}) as r:
+      with requests.get(url, headers={'User-Agent': 'ABPB/4'}) as r:
          r.raise_for_status()
 
          with open(tp, 'wb') as f:
