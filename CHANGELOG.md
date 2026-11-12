@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.3-abpb.2
+
+- Changed the default `abpb_password_key` from `_ybpw` to `_abpw`, so ABPB and YaPB no longer share the same setinfo password key when installed together.
+- Admins should now authenticate with `setinfo _abpw <password>`.
+
 ## 4.3.3-abpb.1
 
 - Compatibility guard: detect YaPB/SYPB/FAPB/E-Bot/PODBot/ZBot/RealBot cvars at map start and set `abpb_quota`/`abpb_autovacate` to 0, preventing two bot managers from filling the same slots.

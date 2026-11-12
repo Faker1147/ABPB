@@ -68,6 +68,7 @@ ABPB 的目录、DLL 名、Metamod 插件名、命令和 cvar 都与其他 BOT �
 - 如果两个系统都自动补位，32 槽服务器很容易被挤爆，常见结果是 `no free edicts` 或服务端直接退出（闪退）。
 - ABPB 默认带有保护：换图时会检测 `yb_*`、`sypb_*`、`fapb_*`、`ebot_*`、`podbot_*`、`pb_*`、`zbot_*`、`zb_*`、`realbot_*` 等 cvar；发现其他 BOT 时自动把 `abpb_quota` 和 `abpb_autovacate` 设为 0，并在日志/控制台提示。
 - 只有在你明确要自己协调多个配额时，才设置 `abpb_compat_auto 0`。
+- ABPB 的管理员 setinfo 键默认是 `_abpw`，不再使用 YaPB 的 `_ybpw`；管理员认证命令为 `setinfo _abpw <密码>`。
 
 | 项目 | ABPB | YaPB | SYPB |
 | --- | --- | --- | --- |

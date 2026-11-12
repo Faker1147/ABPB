@@ -247,7 +247,7 @@ inline ConVar cv_graph_slope_height ("graph_slope_height", "18.0", "Determines t
 // control
 inline ConVar cv_display_menu_text ("display_menu_text", "1", "Enables or disables display menu text, when players asks for menu. Useful only for Android.", true, 0.0f, 1.0f, Var::Xash3D);
 inline ConVar cv_password ("password", "", "The value (password) for the setinfo key. If the user sets the correct password, he gains access to bot commands and menus.", false, 0.0f, 0.0f, Var::Password);
-inline ConVar cv_password_key ("password_key", "_ybpw", "The name of the setinfo key used to store the password for bot commands and menus.", false);
+inline ConVar cv_password_key ("password_key", "_abpw", "The name of the setinfo key used to store the password for bot commands and menus. Defaults to '_abpw' to avoid sharing a key with other bot systems.", false);
 inline ConVar cv_bots_kill_on_endround ("bots_kill_on_endround", "0", "Allows the use of classic bot kill when issuing the end-round command in menus, instead of the gamedll endround.", false);
 
 // game console variables (references to game/mod cvars)

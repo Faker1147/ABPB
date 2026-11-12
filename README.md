@@ -69,6 +69,7 @@ ABPB includes a safety check:
 - At map start it looks for other common bot cvars (`yb_*`, `sypb_*`, `fapb_*`, `ebot_*`, `podbot_*`, `pb_*`, `zbot_*`, `zb_*`, `realbot_*`).
 - If one is found and `abpb_compat_auto` is `1` (default), ABPB sets `abpb_quota 0` and `abpb_autovacate 0` and writes a warning to the server log/console.
 - Set `abpb_compat_auto 0` only if you deliberately want to manage several quotas yourself.
+- The default admin setinfo key is `_abpw`, not YaPB's `_ybpw`; authenticate with `setinfo _abpw <password>`.
 
 For a mixed test, load only one bot manager, or set every other system's quota to 0 and add bots manually from one system at a time. `abpb removebots` only removes ABPB bots.
 

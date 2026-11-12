@@ -1160,17 +1160,17 @@ TEST_CASE ("unit/control_botops") {
   }
 
   // ...admin rights last: gain with the key, loss without, buffers follow...
-  cv_password_key.Set ("_ybpw");
+  cv_password_key.Set ("_abpw");
   cv_password.Set ("secret");
-  engine.SetInfoKey ("_ybpw", "secret");
+  engine.SetInfoKey ("_abpw", "secret");
   ctrl.MaintainAdminRights ();
   CHECK (has_flag (clients[human].flags, ClientFlags::Admin));
 
-  engine.SetInfoKey ("_ybpw", "wrong");
+  engine.SetInfoKey ("_abpw", "wrong");
   ctrl.MaintainAdminRights ();
   CHECK (!has_flag (clients[human].flags, ClientFlags::Admin));
 
-  engine.SetInfoKey ("_ybpw", "secret"); // gain path announces itself
+  engine.SetInfoKey ("_abpw", "secret"); // gain path announces itself
   mark = PrintMark (engine);
   ctrl.MaintainAdminRights ();
   DrainPrints (engine);
@@ -1184,16 +1184,16 @@ TEST_CASE ("unit/control_botops") {
 
   {
     char buf[1024] = {};
-    char key[16] = "_ybpw";
+    char key[16] = "_abpw";
     char val[16] = "secret";
     char bad[16] = "nope";
 
-    engine.SetInfoKey ("_ybpw", "secret");
+    engine.SetInfoKey ("_abpw", "secret");
     engfuncs.pfnSetKeyValue (buf, key, val);
     ctrl.AssignAdminRights (human, buf);
     CHECK (has_flag (clients[human].flags, ClientFlags::Admin));
 
-    engine.SetInfoKey ("_ybpw", "nope");
+    engine.SetInfoKey ("_abpw", "nope");
     engfuncs.pfnSetKeyValue (buf, key, bad);
     ctrl.AssignAdminRights (human, buf);
     CHECK (!has_flag (clients[human].flags, ClientFlags::Admin));
