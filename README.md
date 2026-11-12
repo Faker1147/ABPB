@@ -15,13 +15,9 @@ ABPB keeps AiBo's Human Copycat, Human Aim, local learning, navigation, explorat
 
 ## Download
 
-Download **`ABPB-4.3.3-Windows-x86.zip`** from [Releases](https://github.com/Faker1147/ABPB/releases). The archive contains the DLL, configuration, language files, a Dust2 navigation graph, optional AMXX module/include/sample and Chinese documentation.
+Download the latest **`ABPB-*-Windows-x86.zip`** from [Releases](https://github.com/Faker1147/ABPB/releases). The archive contains the DLL, configuration, language files, a Dust2 navigation graph, optional AMXX module/include/sample and Chinese documentation.
 
-SHA-256 of the current package:
-
-```text
-A0D74829F9B473B5A1F342A3C76786779EDDB1F5D826A19A6488EE746D239D14
-```
+Download the matching **`ABPB-*-Windows-x86.zip.sha256`** file from the same release to verify the package. `SHA256SUMS.txt` inside the ZIP covers every packaged file.
 
 ## Install
 
